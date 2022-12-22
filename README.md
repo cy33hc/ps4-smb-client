@@ -17,6 +17,8 @@ R1 - Navigate to the Remote list of files
 L1 - Navigate to the Local list of files
 TouchPad Button - Exit Application
 ```
+## Known Issues
+- Rename of files and folders in subdirectories fails for Windows Shares. Works with SMB shares.
 
 ## Multi Language Support
 The appplication support following languages
@@ -71,6 +73,7 @@ Before build the app, you need to build the dependencies first.
 Clone the following Git repos and build them in order
 
 openssl - https://github.com/cy33hc/ps4-openssl/tree/OpenSSL_1_1_1-ps4
+
 libsmb2 - https://github.com/cy33hc/libsmb2/tree/ps4
 
 ```
