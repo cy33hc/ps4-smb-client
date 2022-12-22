@@ -38,7 +38,7 @@ int SmbClient::Connect(const char *host, unsigned short port, const char *share,
 	sprintf(server, "%s:%d", host, port);
 	smb2_set_password(smb2, pass);
 	smb2_set_security_mode(smb2, SMB2_NEGOTIATE_SIGNING_ENABLED);
-	smb2_set_timeout(smb2, 30);
+	smb2_set_timeout(smb2, 30000);
 
 	if (smb2_connect_share(smb2, server, share, user) < 0)
 	{
@@ -92,9 +92,28 @@ int SmbClient::Quit()
  *
  * return 1 if successful, 0 otherwise
  */
-int SmbClient::Mkdir(const char *path)
+int SmbClient::Mkdir(const char *ppath)
 {
-	if (smb2_mkdir(smb2, path) != 0)
+	std::string path = std::string(ppath);
+	path = Util::Trim(path, "/");
+	if (smb2_mkdir(smb2, path.c_str()) != 0)
+	{
+		sprintf(response, "%s", smb2_get_error(smb2));
+		return 0;
+	}
+	return 1;
+}
+
+/*
+ * SmbRmdir - remove directory and all files under directory at remote
+ *
+ * return 1 if successful, 0 otherwise
+ */
+int SmbClient::_Rmdir(const char *ppath)
+{
+	std::string path = std::string(ppath);
+	path = Util::Trim(path, "/");
+	if (smb2_rmdir(smb2, path.c_str()) != 0)
 	{
 		sprintf(response, "%s", smb2_get_error(smb2));
 		return 0;
@@ -109,7 +128,6 @@ int SmbClient::Mkdir(const char *path)
  */
 int SmbClient::Rmdir(const char *path, bool recursive)
 {
-	/*
 	if (stop_activity)
 		return 1;
 
@@ -142,8 +160,13 @@ int SmbClient::Rmdir(const char *path, bool recursive)
 			}
 		}
 	}
-	ret = Rmdir(path);
-	*/
+	ret = _Rmdir(path);
+	if (ret == 0)
+	{
+		sprintf(status_message, "%s %s", lang_strings[STR_FAIL_DEL_DIR_MSG], path);
+		return 0;
+	}
+
 	return 1;
 }
 

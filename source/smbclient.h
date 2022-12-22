@@ -33,6 +33,7 @@ public:
 	std::string GetPath(std::string ppath1, std::string ppath2);
 
 private:
+	int _Rmdir(const char *path);
 	struct smb2_context *smb2;
 	char response[1024];
 	bool connected = false;

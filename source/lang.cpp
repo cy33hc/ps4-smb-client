@@ -73,7 +73,7 @@ char lang_strings[LANG_STRINGS_NUM][LANG_STR_SIZE] = {
 	"Deleted",														  // STR_DELETED
 	"Link",															  // STR_LINK
 	"Share",														  // STR_SHARE
-	"Failed",														  // STR_FAILED
+	"310 Failed",													  // STR_FAILED
 };
 
 bool needs_extended_font = false;
@@ -95,54 +95,54 @@ namespace Lang
 		{
 			switch (lang_idx)
 			{
-				case ORBIS_SYSTEM_PARAM_LANG_ITALIAN:
-					sprintf(langFile, "/app0/assets/langs/Italiano.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_SPANISH:
-				case ORBIS_SYSTEM_PARAM_LANG_SPANISH_LA:
-					sprintf(langFile, "/app0/assets/langs/Spanish.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_GERMAN:
-					sprintf(langFile, "/app0/assets/langs/German.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_PORTUGUESE_PT:
-				case ORBIS_SYSTEM_PARAM_LANG_PORTUGUESE_BR:
-					sprintf(langFile, "/app0/assets/langs/Portuguese_BR.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_RUSSIAN:
-					sprintf(langFile, "/app0/assets/langs/Russian.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_DUTCH:
-					sprintf(langFile, "/app0/assets/langs/Dutch.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_FRENCH:
-				case ORBIS_SYSTEM_PARAM_LANG_FRENCH_CA:
-					sprintf(langFile, "/app0/assets/langs/French.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_POLISH:
-					sprintf(langFile, "/app0/assets/langs/Polish.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_JAPANESE:
-					sprintf(langFile, "/app0/assets/langs/Japanese.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_KOREAN:
-					sprintf(langFile, "/app0/assets/langs/Korean.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_CHINESE_S:
-					sprintf(langFile, "/app0/assets/langs/Simplified Chinese.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_CHINESE_T:
-					sprintf(langFile, "/app0/assets/langs/Traditional Chinese.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_INDONESIAN:
-					sprintf(langFile, "/app0/assets/langs/Indonesian.ini");
-					break;
-				case ORBIS_SYSTEM_PARAM_LANG_HUNGARIAN:
-					sprintf(langFile, "/app0/assets/langs/Hungarian.ini");
-					break;
-				default:
-					sprintf(langFile, "/app0/assets/langs/English.ini");
-					break;
+			case ORBIS_SYSTEM_PARAM_LANG_ITALIAN:
+				sprintf(langFile, "/app0/assets/langs/Italiano.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_SPANISH:
+			case ORBIS_SYSTEM_PARAM_LANG_SPANISH_LA:
+				sprintf(langFile, "/app0/assets/langs/Spanish.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_GERMAN:
+				sprintf(langFile, "/app0/assets/langs/German.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_PORTUGUESE_PT:
+			case ORBIS_SYSTEM_PARAM_LANG_PORTUGUESE_BR:
+				sprintf(langFile, "/app0/assets/langs/Portuguese_BR.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_RUSSIAN:
+				sprintf(langFile, "/app0/assets/langs/Russian.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_DUTCH:
+				sprintf(langFile, "/app0/assets/langs/Dutch.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_FRENCH:
+			case ORBIS_SYSTEM_PARAM_LANG_FRENCH_CA:
+				sprintf(langFile, "/app0/assets/langs/French.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_POLISH:
+				sprintf(langFile, "/app0/assets/langs/Polish.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_JAPANESE:
+				sprintf(langFile, "/app0/assets/langs/Japanese.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_KOREAN:
+				sprintf(langFile, "/app0/assets/langs/Korean.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_CHINESE_S:
+				sprintf(langFile, "/app0/assets/langs/Simplified Chinese.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_CHINESE_T:
+				sprintf(langFile, "/app0/assets/langs/Traditional Chinese.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_INDONESIAN:
+				sprintf(langFile, "/app0/assets/langs/Indonesian.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_HUNGARIAN:
+				sprintf(langFile, "/app0/assets/langs/Hungarian.ini");
+				break;
+			default:
+				sprintf(langFile, "/app0/assets/langs/English.ini");
+				break;
 			}
 		}
 

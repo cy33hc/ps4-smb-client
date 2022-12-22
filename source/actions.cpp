@@ -257,6 +257,7 @@ namespace Actions
                     smbclient->Rmdir(it->path, true);
                 else
                 {
+                    sprintf(activity_message, "%s %s", lang_strings[STR_DELETING], it->path);
                     if (!smbclient->Delete(it->path))
                     {
                         sprintf(status_message, "%s - %s", lang_strings[STR_FAILED], smbclient->LastResponse());
