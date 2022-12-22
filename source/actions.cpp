@@ -174,6 +174,7 @@ namespace Actions
 
     void CreateNewLocalFolder(char *new_folder)
     {
+        sprintf(status_message, "%s", "");
         std::string folder = std::string(new_folder);
         folder = Util::Rtrim(Util::Trim(folder, " "), "/");
         std::string path = FS::GetPath(local_directory, folder);
@@ -184,6 +185,7 @@ namespace Actions
 
     void CreateNewRemoteFolder(char *new_folder)
     {
+        sprintf(status_message, "%s", "");
         std::string folder = std::string(new_folder);
         folder = Util::Rtrim(Util::Trim(folder, " "), "/");
         std::string path = smbclient->GetPath(remote_directory, folder.c_str());
@@ -200,6 +202,7 @@ namespace Actions
 
     void RenameLocalFolder(const char *old_path, const char *new_path)
     {
+        sprintf(status_message, "%s", "");
         std::string new_name = std::string(new_path);
         new_name = Util::Rtrim(Util::Trim(new_name, " "), "/");
         std::string path = FS::GetPath(local_directory, new_name);
@@ -210,6 +213,7 @@ namespace Actions
 
     void RenameRemoteFolder(const char *old_path, const char *new_path)
     {
+        sprintf(status_message, "%s", "");
         std::string new_name = std::string(new_path);
         new_name = Util::Rtrim(Util::Trim(new_name, " "), "/");
         std::string path = FS::GetPath(remote_directory, new_name);
@@ -420,6 +424,7 @@ namespace Actions
 
     void UploadFiles()
     {
+        sprintf(status_message, "%s", "");
         int res = pthread_create(&bk_activity_thid, NULL, UploadFilesThread, NULL);
         if (res != 0)
         {
@@ -561,6 +566,7 @@ namespace Actions
 
     void DownloadFiles()
     {
+        sprintf(status_message, "%s", "");
         int res = pthread_create(&bk_activity_thid, NULL, DownloadFilesThread, NULL);
         if (res != 0)
         {

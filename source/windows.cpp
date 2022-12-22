@@ -973,7 +973,7 @@ namespace Windows
             ImGui::OpenPopup(lang_strings[STR_PROGRESS]);
 
             ImGui::SetNextWindowPos(ImVec2(680, 350));
-            ImGui::SetNextWindowSizeConstraints(ImVec2(640, 80), ImVec2(640, 300), NULL, NULL);
+            ImGui::SetNextWindowSizeConstraints(ImVec2(640, 80), ImVec2(640, 400), NULL, NULL);
             if (ImGui::BeginPopupModal(lang_strings[STR_PROGRESS], NULL, ImGuiWindowFlags_AlwaysAutoResize))
             {
                 ImVec2 cur_pos = ImGui::GetCursorPos();
@@ -981,7 +981,7 @@ namespace Windows
                 ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + 620);
                 ImGui::Text("%s", activity_message);
                 ImGui::PopTextWrapPos();
-                ImGui::SetCursorPosY(cur_pos.y + 60);
+                ImGui::SetCursorPosY(cur_pos.y + 95);
 
                 if (file_transfering)
                 {

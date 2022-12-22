@@ -17,6 +17,7 @@
 #include "util.h"
 
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
+#define BUFFER_SIZE 131072
 
 SmbClient::SmbClient()
 {
@@ -38,7 +39,7 @@ int SmbClient::Connect(const char *host, unsigned short port, const char *share,
 	sprintf(server, "%s:%d", host, port);
 	smb2_set_password(smb2, pass);
 	smb2_set_security_mode(smb2, SMB2_NEGOTIATE_SIGNING_ENABLED);
-	smb2_set_timeout(smb2, 30000);
+	smb2_set_timeout(smb2, 30);
 
 	if (smb2_connect_share(smb2, server, share, user) < 0)
 	{
@@ -176,8 +177,47 @@ int SmbClient::Rmdir(const char *path, bool recursive)
  * return 1 if successful, 0 otherwise
  */
 
-int SmbClient::Get(const char *outputfile, const char *path)
+int SmbClient::Get(const char *outputfile, const char *ppath)
 {
+	std::string path = std::string(ppath);
+	path = Util::Trim(path, "/");
+	if (!Size(path.c_str(), &bytes_to_download))
+	{
+		sprintf(response, "%s", smb2_get_error(smb2));
+		return 0;
+	}
+
+	struct smb2fh* in = smb2_open(smb2, path.c_str(), O_RDONLY);
+	if (in == NULL)
+	{
+		sprintf(response, "%s", smb2_get_error(smb2));
+		return 0;
+	}
+
+	FILE* out = FS::Create(outputfile);
+	if (out == NULL)
+	{
+		sprintf(response, "%s", lang_strings[STR_FAILED]);
+		return 0;
+	}
+	
+	uint8_t buff[BUFFER_SIZE];
+	int count = 0;
+	bytes_transfered = 0;
+	while ((count = smb2_read(smb2, in, buff, BUFFER_SIZE)) > 0)
+	{
+		if (count < 0)
+		{
+			sprintf(response, "%s", smb2_get_error(smb2));
+			FS::Close(out);
+			smb2_close(smb2, in);
+			return 0;
+		}
+		FS::Write(out, buff, count);
+		bytes_transfered += count;
+	}
+	FS::Close(out);
+	smb2_close(smb2, in);
 	return 1;
 }
 
@@ -219,6 +259,22 @@ int SmbClient::Delete(const char *ppath)
 		sprintf(response, "%s", smb2_get_error(smb2));
 		return 0;
 	}
+
+	return 1;
+}
+
+int SmbClient::Size(const char *ppath, int64_t *size)
+{
+	std::string path = std::string(ppath);
+	path = Util::Trim(path, "/");
+	dbglogger_log("path=%s", path.c_str());
+	smb2_stat_64 st;
+	if (smb2_stat(smb2, path.c_str(), &st) != 0)
+	{
+		sprintf(response, "%s", smb2_get_error(smb2));
+		return 0;
+	}
+	*size = st.smb2_size;
 
 	return 1;
 }

@@ -68,6 +68,7 @@
 	FUNC(STR_LINK)                     \
 	FUNC(STR_SHARE)                    \
 	FUNC(STR_FAILED)                   \
+	FUNC(STR_FAIL_CREATE_LOCAL_FILE_MSG) \
 
 #define GET_VALUE(x) x,
 #define GET_STRING(x) #x,
@@ -77,8 +78,8 @@ enum
 	FOREACH_STR(GET_VALUE)
 };
 
-#define LANG_STRINGS_NUM 64
-#define LANG_ID_SIZE 64
+#define LANG_STRINGS_NUM 65
+#define LANG_ID_SIZE 65
 #define LANG_STR_SIZE 256
 extern char lang_identifiers[LANG_STRINGS_NUM][LANG_ID_SIZE];
 extern char lang_strings[LANG_STRINGS_NUM][LANG_STR_SIZE];
