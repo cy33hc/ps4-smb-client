@@ -51,7 +51,7 @@ namespace FS
     void RmDir(const std::string &path);
     int RmRecursive(const std::string &path);
 
-    int64_t GetSize(const char *path);
+    int64_t GetSize(const std::string &path);
 
     bool FileExists(const std::string &path);
     bool FolderExists(const std::string &path);

@@ -301,7 +301,7 @@ namespace Actions
             return 0;
         }
 
-        if (overwrite_type == OVERWRITE_PROMPT && smbclient->Ping())
+        if (overwrite_type == OVERWRITE_PROMPT && smbclient->FileExists(dest))
         {
             sprintf(confirm_message, "%s %s?", lang_strings[STR_OVERWRITE], dest);
             confirm_state = CONFIRM_WAIT;
@@ -314,7 +314,7 @@ namespace Actions
             activity_inprogess = true;
             selected_action = action_to_take;
         }
-        else if (overwrite_type == OVERWRITE_NONE && smbclient->Ping())
+        else if (overwrite_type == OVERWRITE_NONE && smbclient->FileExists(dest))
         {
             confirm_state = CONFIRM_NO;
         }

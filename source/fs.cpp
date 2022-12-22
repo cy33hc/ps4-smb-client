@@ -94,7 +94,7 @@ namespace FS
 
     FILE *OpenRead(const std::string &path)
     {
-        FILE *fd = fopen(path.c_str(), "r");
+        FILE *fd = fopen(path.c_str(), "rb");
         return fd;
     }
 
@@ -112,7 +112,7 @@ namespace FS
 
     int Read(FILE *f, void *buffer, uint32_t size)
     {
-        const auto read = fread(buffer, size, 1, f);
+        const auto read = fread(buffer, 1, size, f);
         return read;
     }
 

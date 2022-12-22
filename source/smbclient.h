@@ -25,6 +25,7 @@ public:
 	int Put(const char *inputfile, const char *path);
 	int Rename(const char *src, const char *dst);
 	int Delete(const char *path);
+	bool FileExists(const char *path);
 	std::vector<FsEntry> ListDir(const char *path);
 	bool IsConnected();
 	bool Ping();

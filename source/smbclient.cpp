@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <errno.h>
-#include <dbglogger.h>
 
 #include "lang.h"
 #include "smbclient.h"
@@ -200,7 +199,7 @@ int SmbClient::Get(const char *outputfile, const char *ppath)
 		sprintf(response, "%s", lang_strings[STR_FAILED]);
 		return 0;
 	}
-	
+
 	uint8_t buff[BUFFER_SIZE];
 	int count = 0;
 	bytes_transfered = 0;
@@ -221,15 +220,72 @@ int SmbClient::Get(const char *outputfile, const char *ppath)
 	return 1;
 }
 
+bool SmbClient::FileExists(const char *ppath)
+{
+	std::string path = std::string(ppath);
+	path = Util::Trim(path, "/");
+	smb2_stat_64 st;
+	int ret = smb2_stat(smb2, path.c_str(), &st);
+	if (ret != 0)
+	{
+		sprintf(response, "%s", smb2_get_error(smb2));
+		return false;
+	}
+
+	return true;
+}
+
 /*
  * SmbPut - issue a PUT command and send data from input
  *
  * return 1 if successful, 0 otherwise
  */
-
-int SmbClient::Put(const char *inputfile, const char *path)
+int SmbClient::Put(const char *inputfile, const char *ppath)
 {
+	std::string path = std::string(ppath);
+	path = Util::Trim(path, "/");
+
+	bytes_to_download = FS::GetSize(inputfile);
+	if (bytes_to_download < 0)
+	{
+		sprintf(response, "%s", lang_strings[STR_FAILED]);
+		return 0;
+	}
+
+	FILE* in = FS::OpenRead(inputfile);
+	if (in == NULL)
+	{
+		sprintf(response, "%s", lang_strings[STR_FAILED]);
+		return 0;
+	}
+	
+	struct smb2fh* out = smb2_open(smb2, path.c_str(), O_WRONLY | O_CREAT | O_TRUNC);
+	if (out == NULL)
+	{
+		sprintf(response, "%s", smb2_get_error(smb2));
+		return 0;
+	}
+
+	uint8_t buff[BUFFER_SIZE];
+	int count = 0;
+	bytes_transfered = 0;
+	while ((count = FS::Read(in, buff, BUFFER_SIZE)) > 0)
+	{
+		if (count < 0)
+		{
+			sprintf(response, "%s", lang_strings[STR_FAILED]);
+			FS::Close(in);
+			smb2_close(smb2, out);
+			return 0;
+		}
+		smb2_write(smb2, out, buff, count);
+		bytes_transfered += count;
+	}
+	FS::Close(in);
+	smb2_close(smb2, out);
+
 	return 1;
+
 }
 
 int SmbClient::Rename(const char *src, const char *dst)
@@ -238,8 +294,6 @@ int SmbClient::Rename(const char *src, const char *dst)
 	std::string path2 = std::string(dst);
 	path1 = Util::Trim(path1, "/");
 	path2 = Util::Trim(path2, "/");
-	dbglogger_log("path1=%s", path1.c_str());
-	dbglogger_log("path2=%s", path2.c_str());
 	if (smb2_rename(smb2, path1.c_str(), path2.c_str()) != 0)
 	{
 		sprintf(response, "%s", smb2_get_error(smb2));
@@ -253,7 +307,6 @@ int SmbClient::Delete(const char *ppath)
 {
 	std::string path = std::string(ppath);
 	path = Util::Trim(path, "/");
-	dbglogger_log("path=%s", path.c_str());
 	if (smb2_unlink(smb2, path.c_str()) != 0)
 	{
 		sprintf(response, "%s", smb2_get_error(smb2));
@@ -267,7 +320,6 @@ int SmbClient::Size(const char *ppath, int64_t *size)
 {
 	std::string path = std::string(ppath);
 	path = Util::Trim(path, "/");
-	dbglogger_log("path=%s", path.c_str());
 	smb2_stat_64 st;
 	if (smb2_stat(smb2, path.c_str(), &st) != 0)
 	{
@@ -306,7 +358,6 @@ std::vector<FsEntry> SmbClient::ListDir(const char *path)
 	dir = smb2_opendir(smb2, Util::Ltrim(ppath, "/").c_str());
 	if (dir == NULL)
 	{
-		dbglogger_log("%s", smb2_get_error(smb2));
 		sprintf(status_message, "%s - %s", lang_strings[STR_FAIL_READ_LOCAL_DIR_MSG], smb2_get_error(smb2));
 		return out;
 	}
