@@ -15,7 +15,6 @@
 
 extern int view_mode;
 extern bool handle_updates;
-extern SmbClient *smbclient;
 extern int64_t bytes_transfered;
 extern int64_t bytes_to_download;
 extern std::vector<FsEntry> local_files;

@@ -9,7 +9,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <errno.h>
-
+#include <dbglogger.h>
 #include "lang.h"
 #include "smbclient.h"
 #include "windows.h"
@@ -219,6 +219,48 @@ int SmbClient::Get(const char *outputfile, const char *ppath)
 		bytes_transfered += count;
 	}
 	FS::Close(out);
+	smb2_close(smb2, in);
+	free((void*)buff);
+	return 1;
+}
+
+int SmbClient::Copy(const char *ppath, int socket_fd)
+{
+	std::string path = std::string(ppath);
+	path = Util::Trim(path, "/");
+	if (!IsConnected())
+	{
+		sprintf(response, "%s", smb2_get_error(smb2));
+		return 0;
+	}
+
+	struct smb2fh* in = smb2_open(smb2, path.c_str(), O_RDONLY);
+	if (in == NULL)
+	{
+		sprintf(response, "%s", smb2_get_error(smb2));
+		return 0;
+	}
+
+	uint8_t *buff = (uint8_t*)malloc(max_read_size);
+	int count = 0;
+	while ((count = smb2_read(smb2, in, buff, max_read_size)) > 0)
+	{
+		if (count < 0)
+		{
+			sprintf(response, "%s", smb2_get_error(smb2));
+			smb2_close(smb2, in);
+			free((void*)buff);
+			return 0;
+		}
+		dbglogger_log("before send data");
+		int ret = send(socket_fd, buff, count, 0);
+		dbglogger_log("after send data count=%d", ret);
+		if (ret < 0)
+		{
+			dbglogger_log("failed send count=%d", ret);
+			break;
+		}
+	}
 	smb2_close(smb2, in);
 	free((void*)buff);
 	return 1;

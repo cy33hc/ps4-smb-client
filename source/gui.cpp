@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include "windows.h"
 #include "gui.h"
-#include "ftpclient.h"
 #include "SDL2/SDL.h"
 #include "imgui_impl_sdl.h"
 #include "imgui_impl_sdlrenderer.h"

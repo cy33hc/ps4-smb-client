@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include <map>
+#include "smbclient.h"
 
 #define APP_ID "ps4-smb-client"
 #define DATA_PATH "/data/" APP_ID
@@ -45,6 +46,7 @@ extern char last_site[32];
 extern char display_site[32];
 extern char language[128];
 extern SmbSettings *smb_settings;
+extern SmbClient *smbclient;
 
 namespace CONFIG
 {

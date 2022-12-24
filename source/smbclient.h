@@ -26,6 +26,7 @@ public:
 	int Rename(const char *src, const char *dst);
 	int Delete(const char *path);
 	bool FileExists(const char *path);
+	int Copy(const char *path, int socket_fd);
 	std::vector<FsEntry> ListDir(const char *path);
 	bool IsConnected();
 	bool Ping();
