@@ -22,6 +22,7 @@
 #include "gui.h"
 #include "util.h"
 #include "http_server.h"
+#include "installer.h"
 
 extern "C"
 {
@@ -160,6 +161,7 @@ void InitImgui()
 
 static void terminate()
 {
+	INSTALLER::Exit();
 	terminate_jbc();
 	sceSystemServiceLoadExec("exit", NULL);
 }
@@ -190,6 +192,11 @@ int main()
 		return 0;
 	}
 
+	ret = sceSysmoduleLoadModuleInternal(ORBIS_SYSMODULE_INTERNAL_BGFT);
+	if (ret) {
+		return 0;
+	}
+
 	if (sceSysmoduleLoadModuleInternal(ORBIS_SYSMODULE_INTERNAL_PAD) < 0)
 		return 0;
 
@@ -206,6 +213,9 @@ int main()
 		return 0;
 
     sceNetPoolCreate("simple", NET_HEAP_SIZE, 0);
+
+	if (INSTALLER::Init() < 0)
+		return 0;
 
 	CONFIG::LoadConfig();
 
@@ -243,5 +253,6 @@ int main()
 	ImGui::DestroyContext();
 	if (server != NULL)
 		delete(server);
+
 	return 0;
 }

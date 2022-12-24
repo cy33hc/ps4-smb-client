@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <errno.h>
+#include <orbis/Net.h>
 #include <dbglogger.h>
 #include "lang.h"
 #include "smbclient.h"
@@ -253,8 +254,8 @@ int SmbClient::Copy(const char *ppath, int socket_fd)
 			return 0;
 		}
 		dbglogger_log("before send data");
-		int ret = send(socket_fd, buff, count, 0);
-		dbglogger_log("after send data count=%d", ret);
+		int ret = sceNetSend(socket_fd, buff, count, 0);
+		dbglogger_log("after send data count=0x%08X", ret);
 		if (ret < 0)
 		{
 			dbglogger_log("failed send count=%d", ret);
@@ -483,4 +484,27 @@ std::string SmbClient::GetPath(std::string ppath1, std::string ppath2)
 	path2 = Util::Rtrim(Util::Trim(path2, " "), "/");
 	path1 = path1 + "/" + path2;
 	return Util::Ltrim(path1, "/");
+}
+
+int SmbClient::Head(const char *ppath, void* buffer, uint16_t len)
+{
+	std::string path = std::string(ppath);
+	path = Util::Trim(path, "/");
+	if (!Size(path.c_str(), &bytes_to_download))
+	{
+		return 0;
+	}
+
+	struct smb2fh* in = smb2_open(smb2, path.c_str(), O_RDONLY);
+	if (in == NULL)
+	{
+		return 0;
+	}
+
+	int count = smb2_read(smb2, in, (uint8_t*)buffer, len);
+	smb2_close(smb2, in);
+	if (count != len)
+		return 0;
+
+	return 1;
 }

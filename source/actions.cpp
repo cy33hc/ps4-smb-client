@@ -8,6 +8,8 @@
 #include "util.h"
 #include "lang.h"
 #include "actions.h"
+#include "installer.h"
+#include <dbglogger.h>
 
 namespace Actions
 {
@@ -575,6 +577,25 @@ namespace Actions
             multi_selected_remote_files.clear();
             Windows::SetModalMode(false);
             selected_action = ACTION_REFRESH_LOCAL_FILES;
+        }
+    }
+
+    void InstallPkgs()
+    {
+        for (std::set<FsEntry>::iterator it = multi_selected_remote_files.begin(); it != multi_selected_remote_files.end(); ++it)
+        {
+            if (!it->isDir)
+            {
+                std::string path = std::string(it->path);
+                path = Util::ToLower(path);
+                if (path.find_last_of(".pkg") == path.size()-1)
+                {
+                    pkg_header header;
+                    smbclient->Head(it->path, (void*)&header, sizeof(header));
+                    dbglogger_log("contentid=%s", header.pkg_content_id);
+                    INSTALLER::InstallPkg(it->path, &header);
+                }
+            }
         }
     }
 

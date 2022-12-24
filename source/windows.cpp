@@ -801,6 +801,16 @@ namespace Windows
                 }
                 ImGui::PopID();
                 ImGui::Separator();
+
+                ImGui::PushID("Install##settings");
+                if (ImGui::Selectable(lang_strings[STR_INSTALL], false, flags | ImGuiSelectableFlags_DontClosePopups, ImVec2(220, 0)))
+                {
+                    SetModalMode(false);
+                    selected_action = ACTION_INSTALL;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::PopID();
+                ImGui::Separator();
             }
 
             flags = ImGuiSelectableFlags_Disabled;
@@ -1160,6 +1170,10 @@ namespace Windows
         case ACTION_DISCONNECT_FTP_AND_EXIT:
             Actions::DisconnectFTP();
             done = true;
+            break;
+        case ACTION_INSTALL:
+            Actions::InstallPkgs();
+            selected_action = ACTION_NONE;
             break;
         default:
             break;

@@ -34,7 +34,8 @@ enum ACTIONS
     ACTION_REMOTE_CLEAR_ALL,
     ACTION_CONNECT_FTP,
     ACTION_DISCONNECT_FTP,
-    ACTION_DISCONNECT_FTP_AND_EXIT
+    ACTION_DISCONNECT_FTP_AND_EXIT,
+    ACTION_INSTALL
 };
 
 enum OverWriteType
@@ -72,6 +73,7 @@ namespace Actions
     void DisconnectFTP();
     void SelectAllLocalFiles();
     void SelectAllRemoteFiles();
+    void InstallPkgs();
 }
 
 #endif

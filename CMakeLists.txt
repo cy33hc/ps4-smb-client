@@ -10,10 +10,11 @@ add_executable(ps4_smb_client
   source/config.cpp
   source/fs.cpp
   source/gui.cpp
-  source/html_request.cpp
+  source/http_request.cpp
   source/http_server.cpp
   source/ime_dialog.cpp
   source/inifile.c
+  source/installer.cpp
   source/lang.cpp
   source/main.cpp
   source/orbis_jbc.c
@@ -55,4 +56,6 @@ target_link_libraries(ps4_smb_client
   SceSysUtil
   SceImeDialog
   SceNet
+  SceBgft
+  SceAppInstUtil
 )

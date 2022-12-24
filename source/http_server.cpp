@@ -14,9 +14,10 @@
 #include <set>
 #include <thread>
 #include <fstream>
+#include <orbis/Net.h>
 
 #include "http_server.h"
-#include "html_request.h"
+#include "http_request.h"
 #include "config.h"
 
 #define SOCKET_BUFSIZ 1048576
@@ -37,11 +38,12 @@ public:
     {
         if (request->GetRequestType() == HTTP_GET || request->GetRequestType() == HTTP_HEAD)
         {
-            std::string filepath = request->GetParameter("filepath");
+            std::string filepath = Request::UrlDecode(request->GetPath());
+            dbglogger_log("filepath=%s", filepath.c_str());
             if (filepath.empty() || !smbclient->IsConnected())
             {
                 std::string str = "HTTP/1.1 404\r\n\r\n";
-                send(socket_num, str.c_str(), str.size(), 0);
+                sceNetSend(socket_num, str.c_str(), str.size(), 0);
                 return;
             }
             int64_t file_size;
@@ -49,24 +51,24 @@ public:
             if (ret == 0)
             {
                 std::string str = "HTTP/1.1 500\r\n\r\nError getting filepath - " + filepath;
-                send(socket_num, str.c_str(), str.size(), 0);
+                sceNetSend(socket_num, str.c_str(), str.size(), 0);
                 return;
             }
             std::string str = "HTTP/1.1 ";
             if (request->GetRequestType() == HTTP_GET)
-                str = str + "200\r\n";
+                str = str + "200 OK\r\n";
             else
-                str = str + "204\r\n";
-            str = str + "Content-Type: application/octet-stream\r\n";
+                str = str + "204 OK\r\n";
+            str = str + "Content-Type: application/octet-stream;\r\n";
             std::string filename = filepath;
             size_t slash_pos = filename.find_last_of("/");
             if (slash_pos != std::string::npos)
             {
                 filename = filename.substr(slash_pos + 1);
             }
-            str = str + "content-disposition: attachment; filename=" + filename + "\r\n";
+            //str = str + "content-disposition: attachment; filename=" + filename + "\r\n";
             str = str + "content-length: " + std::to_string(file_size) + "\r\n\r\n";
-            send(socket_num, str.c_str(), str.size(), 0);
+            sceNetSend(socket_num, str.c_str(), str.size(), 0);
 
             if (request->GetRequestType() == HTTP_HEAD)
                 return;
@@ -76,7 +78,7 @@ public:
         else
         {
             std::string str = "HTTP/1.1 500\r\n\r\nUnsupported opeartion\r\n\r\n";
-            send(socket_num, str.c_str(), str.size(), 0);
+            sceNetSend(socket_num, str.c_str(), str.size(), 0);
         }
         return;
     }
