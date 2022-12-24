@@ -273,7 +273,7 @@ namespace Windows
         {
             ime_single_field = smb_settings->share;
             ResetImeCallbacks();
-            ime_field_size = 16;
+            ime_field_size = 255;
             ime_callback = SingleValueImeCallback;
             Dialog::initImeDialog(lang_strings[STR_SHARE], smb_settings->share, 255, ORBIS_TYPE_BASIC_LATIN, pos.x, pos.y);
             gui_mode = GUI_MODE_IME;
