@@ -27,7 +27,7 @@ add_executable(ps4_smb_client
 
 add_self(ps4_smb_client)
 
-add_pkg(ps4_smb_client ${CMAKE_SOURCE_DIR}/data "SMBC00001" "PS4 SMB Client" "01.01" 32 0)
+add_pkg(ps4_smb_client ${CMAKE_SOURCE_DIR}/data "SMBC00001" "PS4 SMB Client" "01.02" 32 0)
 
 target_link_libraries(ps4_smb_client
   c
