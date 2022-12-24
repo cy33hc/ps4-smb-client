@@ -75,6 +75,7 @@ char lang_strings[LANG_STRINGS_NUM][LANG_STR_SIZE] = {
 	"Share",														  // STR_SHARE
 	"310 Failed",													  // STR_FAILED
 	"310 Failed to create file on local",							  // STR_FAIL_CREATE_LOCAL_FILE_MSG
+	"Install",														  // STR_INSTALL
 };
 
 bool needs_extended_font = false;
@@ -140,6 +141,9 @@ namespace Lang
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_HUNGARIAN:
 				sprintf(langFile, "/app0/assets/langs/Hungarian.ini");
+				break;
+			case ORBIS_SYSTEM_PARAM_LANG_GREEK:
+				sprintf(langFile, "/app0/assets/langs/Greek.ini");
 				break;
 			default:
 				sprintf(langFile, "/app0/assets/langs/English.ini");
