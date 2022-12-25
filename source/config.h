@@ -19,6 +19,7 @@
 #define CONFIG_SMB_SERVER_USER "smb_server_user"
 #define CONFIG_SMB_SERVER_PASSWORD "smb_server_password"
 #define CONFIG_SMB_SERVER_SHARE "smb_server_share"
+#define CONFIG_SMB_SERVER_HTTP_PORT "smb_server_http_port"
 
 #define CONFIG_LAST_SITE "last_site"
 
@@ -34,6 +35,7 @@ struct SmbSettings
     char username[33];
     char password[25];
     int server_port;
+    int http_port;
     char share[256];
 };
 

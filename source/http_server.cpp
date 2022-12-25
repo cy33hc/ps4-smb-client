@@ -47,6 +47,8 @@ public:
                 return;
             }
             int64_t file_size;
+            time_t now;
+            time(&now);
             int ret = smbclient->Size(filepath.c_str(), &file_size);
             if (ret == 0)
             {
@@ -56,7 +58,11 @@ public:
             }
             std::string str = "HTTP/1.1 200 OK\r\n";
             str = str + "Content-Type: application/octet-stream;\r\n";
-            str = str + "Accept-Ranges: bytes\r\r";
+            str = str + "cache-control: max-age=3600\r\n";
+            str = str + "last-modified: Tue, 18 Aug 2020 17:22:30 GMT\r\n";
+            str = str + "etag: W/\"" + std::to_string(now) + "\"\r\n";
+            str = str + "Date: Sun, 25 Dec 2022 08:03:39 GMT\r\n";
+            str = str + "Connection: keep-alive\r\n";
             str = str + "content-length: " + std::to_string(file_size) + "\r\n\r\n";
             sceNetSend(socket_num, str.c_str(), str.size(), 0);
 
@@ -118,6 +124,12 @@ int HttpServer::AcceptConnection()
     int fd = accept(server_fd, (struct sockaddr *)&address, &sizeof_address);
     if (fd < 0)
     {
+        return -1;
+    }
+
+    if (setsockopt(fd, SOL_SOCKET, SO_KEEPALIVE, &on, sizeof(on)) == -1)
+    {
+        close(fd);
         return -1;
     }
 

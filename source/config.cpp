@@ -66,6 +66,9 @@ namespace CONFIG
             sprintf(setting.password, "%s", ReadString(sites[i].c_str(), CONFIG_SMB_SERVER_PASSWORD, ""));
             WriteString(sites[i].c_str(), CONFIG_SMB_SERVER_PASSWORD, setting.password);
 
+            setting.http_port = ReadInt(sites[i].c_str(), CONFIG_SMB_SERVER_HTTP_PORT, 80);
+            WriteInt(sites[i].c_str(), CONFIG_SMB_SERVER_HTTP_PORT, setting.http_port);
+
             site_settings.insert(std::make_pair(sites[i], setting));
         }
 

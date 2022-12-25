@@ -29,13 +29,9 @@ std::string Request::UrlEncode(std::string url)
             (c >= 'a' && c <= 'z') ||
             (c >= 'A' && c <= 'Z') ||
             c == '-' || c == '_' || c == '.' || c == '!' || c == '~' ||
-            c == '*' || c == '\'' || c == '(' || c == ')')
+            c == '*' || c == '\'' || c == '(' || c == ')' || c =='/')
         {
             v.push_back(c);
-        }
-        else if (c == ' ')
-        {
-            v.push_back('+');
         }
         else
         {

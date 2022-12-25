@@ -10,6 +10,7 @@
 #include "installer.h"
 #include "util.h"
 #include "http_request.h"
+#include "config.h"
 
 #define BGFT_HEAP_SIZE (1 * 1024 * 1024)
 
@@ -95,7 +96,7 @@ namespace INSTALLER
 		int ret;
 		char filepath[2000];
 		std::string filename = std::string(ffilename);
-		sprintf(filepath, "http://127.0.0.1:9090/%s", Request::UrlEncode(Util::Trim(filename, "/")).c_str());
+		sprintf(filepath, "http://127.0.0.1:9090/%s", Util::Trim(filename, "/").c_str());
 		std::string cid = std::string((char *)header->pkg_content_id);
 		cid = cid.substr(cid.find_first_of("-") + 1, 9);
 		int user_id;
