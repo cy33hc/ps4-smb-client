@@ -1,4 +1,4 @@
-#include <sys/errno.h>
+#include <errno.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <unistd.h>
@@ -54,19 +54,9 @@ public:
                 sceNetSend(socket_num, str.c_str(), str.size(), 0);
                 return;
             }
-            std::string str = "HTTP/1.1 ";
-            if (request->GetRequestType() == HTTP_GET)
-                str = str + "200 OK\r\n";
-            else
-                str = str + "204 OK\r\n";
+            std::string str = "HTTP/1.1 200 OK\r\n";
             str = str + "Content-Type: application/octet-stream;\r\n";
-            std::string filename = filepath;
-            size_t slash_pos = filename.find_last_of("/");
-            if (slash_pos != std::string::npos)
-            {
-                filename = filename.substr(slash_pos + 1);
-            }
-            //str = str + "content-disposition: attachment; filename=" + filename + "\r\n";
+            str = str + "Accept-Ranges: bytes\r\r";
             str = str + "content-length: " + std::to_string(file_size) + "\r\n\r\n";
             sceNetSend(socket_num, str.c_str(), str.size(), 0);
 

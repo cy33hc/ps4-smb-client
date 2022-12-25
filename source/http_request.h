@@ -23,7 +23,9 @@ private:
     std::string text;
     std::string url_path;
     std::map<std::string, std::string> request_inputs;
+    std::map<std::string, std::string> headers;
     void UrlParser(std::string url);
+    void HeaderParser(std::vector<std::string> &lines);
     static char FromHex(char ch);
     static char ToHex(char code);
 

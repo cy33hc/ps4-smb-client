@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <vector>
 #include "http_request.h"
+#include "util.h"
 #include <dbglogger.h>
 
 /* Converts a hex character to its integer value */
@@ -92,12 +93,14 @@ Request::Request(char *buffer, int buffer_length)
             a += buffer[i];
             i++;
         }
-        if ((a.size() == 0 || a[0] == '\n') && header_ends == 0)
+        if ((a.size() == 0 || a[0] == '\n' || a[0] == '\r') && header_ends == 0)
         {
             header_ends = lines.size();
+            break;
         }
         lines.push_back(a);
     }
+
     std::string tmp[3];
     int tmp_cnt = 0;
     for (int i = 0; i < lines[0].size(); i++)
@@ -107,6 +110,8 @@ Request::Request(char *buffer, int buffer_length)
         else
             tmp[tmp_cnt].push_back(lines[0][i]);
     }
+
+    HeaderParser(lines);
 
     if (tmp[0] == "GET")
         request_type = HTTP_GET;
@@ -143,6 +148,18 @@ RequestType Request::GetRequestType()
 std::string Request::GetPath()
 {
     return url_path;
+}
+
+void Request::HeaderParser(std::vector<std::string> &lines)
+{
+    for (int i = 1; i < lines.size(); i++)
+    {
+        size_t colon = lines[i].find_first_of(":");
+        std::string name = lines[i].substr(0, colon);
+        name = Util::Trim(name, " ");
+        std::string value = lines[i].substr(colon+1);
+        headers[Util::ToLower(name)] = Util::Trim(value, " ");
+    }
 }
 
 void Request::UrlParser(std::string url)
