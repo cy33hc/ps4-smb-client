@@ -272,7 +272,7 @@ namespace Windows
 
         pos = ImGui::GetCursorPos();
         sprintf(id, "%s##share", smb_settings->share);
-        if (ImGui::Button(id, ImVec2(290, 0)))
+        if (ImGui::Button(id, ImVec2(190, 0)))
         {
             ime_single_field = smb_settings->share;
             ResetImeCallbacks();
