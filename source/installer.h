@@ -100,4 +100,5 @@ namespace INSTALLER
     void Exit(void);
 
     int InstallPkg(const char *filename, pkg_header *header);
+    bool HttpHostIsUp();
 }

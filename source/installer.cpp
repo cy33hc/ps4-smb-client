@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/socket.h>
+#include <sys/time.h>
+#include <arpa/inet.h>
 #include <orbis/libkernel.h>
 #include <orbis/Bgft.h>
 #include <orbis/AppInstUtil.h>
@@ -10,6 +13,8 @@
 #include "util.h"
 #include "http_request.h"
 #include "config.h"
+#include "windows.h"
+#include "lang.h"
 
 #define BGFT_HEAP_SIZE (1 * 1024 * 1024)
 
@@ -155,4 +160,78 @@ namespace INSTALLER
 		return 0;
 	}
 
+	bool HttpHostIsUp()
+	{
+		int http_socket;
+		in_addr dst_addr; /* destination address */
+		sockaddr_in server_addr;
+		int on = 1;		/* used in Setsockopt function */
+		int32_t retval; /* return value */
+		std::string message = "GET / HTTP/1.1\r\nAccept: */*\r\n\r\n";
+		char response[16];
+		struct timeval tv;
+		tv.tv_sec = 3;
+		tv.tv_usec = 0;
+
+		memset(&server_addr, 0, sizeof(server_addr));
+		inet_pton(AF_INET, smb_settings->server_ip, (void *)&dst_addr);
+		server_addr.sin_addr = dst_addr;
+		server_addr.sin_port = htons(smb_settings->http_port);
+		server_addr.sin_family = AF_INET;
+
+		http_socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+		if (http_socket < 0)
+		{
+			return false;
+		}
+
+		retval = setsockopt(http_socket, SOL_SOCKET, SO_REUSEADDR, (const void *)&on, sizeof(on));
+		if (retval == -1)
+		{
+			goto err;
+		}
+
+		retval = setsockopt(http_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
+		if (retval == -1)
+		{
+			sprintf(status_message, "%s", lang_strings[STR_FAILED_HTTP_CHECK]);
+			goto err;
+		}
+
+		retval = connect(http_socket, (sockaddr *)&server_addr, sizeof(server_addr));
+		if (retval < 0)
+		{
+			sprintf(status_message, "%s", lang_strings[STR_FAILED_HTTP_CHECK]);
+			goto err;
+		}
+		
+		retval = send(http_socket, message.c_str(), message.size(), MSG_CONFIRM);
+		if (retval < 0)
+		{
+			sprintf(status_message, "%s", lang_strings[STR_FAILED_HTTP_CHECK]);
+			goto err;
+		}
+
+		retval = recv(http_socket, response, 16, 0);
+		if (retval < 0)
+		{
+			sprintf(status_message, "%s", lang_strings[STR_FAILED_HTTP_CHECK]);
+			goto err;
+		}
+
+		if (strncmp(response, "HTTP", 4) != 0)
+		{
+			sprintf(status_message, "%s", lang_strings[STR_REMOTE_NOT_HTTP]);
+			goto err;
+		}
+
+		shutdown(http_socket, SHUT_RDWR);
+		close(http_socket);
+		return 1;
+
+	err:
+		shutdown(http_socket, SHUT_RDWR);
+		close(http_socket);
+		return 0;
+	}
 }

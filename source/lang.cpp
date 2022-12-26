@@ -80,6 +80,9 @@ char lang_strings[LANG_STRINGS_NUM][LANG_STR_SIZE] = {
 	"Success",														  // STR_INSTALL_SUCCESS
 	"Failed",														  // STR_INSTALL_FAILED
 	"Skipped",														  // STR_INSTALL_SKIPPED
+	"Checking connection to remote HTTP Server",					  // STR_CHECK_HTTP_MSG
+	"Failed connecting to HTTP Server",								  // STR_FAILED_HTTP_CHECK
+	"Remote is not a HTTP Server"									  // STR_REMOTE_NOT_HTTP
 };
 
 bool needs_extended_font = false;
@@ -102,58 +105,58 @@ namespace Lang
 			switch (lang_idx)
 			{
 			case ORBIS_SYSTEM_PARAM_LANG_ITALIAN:
-				sprintf(langFile, "/app0/assets/langs/Italiano.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Italiano.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_SPANISH:
 			case ORBIS_SYSTEM_PARAM_LANG_SPANISH_LA:
-				sprintf(langFile, "/app0/assets/langs/Spanish.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Spanish.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_GERMAN:
-				sprintf(langFile, "/app0/assets/langs/German.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/German.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_PORTUGUESE_PT:
 			case ORBIS_SYSTEM_PARAM_LANG_PORTUGUESE_BR:
-				sprintf(langFile, "/app0/assets/langs/Portuguese_BR.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Portuguese_BR.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_RUSSIAN:
-				sprintf(langFile, "/app0/assets/langs/Russian.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Russian.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_DUTCH:
-				sprintf(langFile, "/app0/assets/langs/Dutch.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Dutch.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_FRENCH:
 			case ORBIS_SYSTEM_PARAM_LANG_FRENCH_CA:
-				sprintf(langFile, "/app0/assets/langs/French.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/French.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_POLISH:
-				sprintf(langFile, "/app0/assets/langs/Polish.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Polish.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_JAPANESE:
-				sprintf(langFile, "/app0/assets/langs/Japanese.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Japanese.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_KOREAN:
-				sprintf(langFile, "/app0/assets/langs/Korean.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Korean.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_CHINESE_S:
-				sprintf(langFile, "/app0/assets/langs/Simplified Chinese.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Simplified Chinese.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_CHINESE_T:
-				sprintf(langFile, "/app0/assets/langs/Traditional Chinese.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Traditional Chinese.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_INDONESIAN:
-				sprintf(langFile, "/app0/assets/langs/Indonesian.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Indonesian.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_HUNGARIAN:
-				sprintf(langFile, "/app0/assets/langs/Hungarian.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Hungarian.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_GREEK:
-				sprintf(langFile, "/app0/assets/langs/Greek.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Greek.ini");
 				break;
 			case ORBIS_SYSTEM_PARAM_LANG_VIETNAMESE:
-				sprintf(langFile, "/app0/assets/langs/Vietnamese.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/Vietnamese.ini");
 				break;
 			default:
-				sprintf(langFile, "/app0/assets/langs/English.ini");
+				sprintf(langFile, "%s", "/app0/assets/langs/English.ini");
 				break;
 			}
 		}
@@ -168,7 +171,7 @@ namespace Lang
 					if (strcmp(lang_identifiers[i], identifier) == 0)
 					{
 						char *newline = nullptr, *p = buffer;
-						while (newline = strstr(p, "\\n"))
+						while ((newline = strstr(p, "\\n")) != NULL)
 						{
 							newline[0] = '\n';
 							int len = strlen(&newline[2]);

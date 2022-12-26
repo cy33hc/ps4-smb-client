@@ -39,7 +39,7 @@ namespace Actions
         }
         FS::Sort(local_files);
         if (err != 0)
-            sprintf(status_message, lang_strings[STR_FAIL_READ_LOCAL_DIR_MSG]);
+            sprintf(status_message, "%s", lang_strings[STR_FAIL_READ_LOCAL_DIR_MSG]);
     }
 
     void RefreshRemoteFiles(bool apply_filter)
@@ -47,7 +47,7 @@ namespace Actions
         if (!smbclient->Ping())
         {
             smbclient->Quit();
-            sprintf(status_message, lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
+            sprintf(status_message, "%s", lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
             return;
         }
 
@@ -88,7 +88,7 @@ namespace Actions
             {
                 if (temp_path.find_last_of("/") == 0)
                 {
-                    sprintf(local_directory, "/");
+                    sprintf(local_directory, "%s", "/");
                 }
                 else
                 {
@@ -117,7 +117,7 @@ namespace Actions
         if (!smbclient->Ping())
         {
             smbclient->Quit();
-            sprintf(status_message, lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
+            sprintf(status_message, "%s", lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
             return;
         }
 
@@ -128,7 +128,7 @@ namespace Actions
             {
                 if (temp_path.find_last_of("/") == 0)
                 {
-                    sprintf(remote_directory, "/");
+                    sprintf(remote_directory, "%s", "/");
                 }
                 else
                 {
@@ -273,7 +273,7 @@ namespace Actions
         }
         else
         {
-            sprintf(status_message, lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
+            sprintf(status_message, "%s", lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
             DisconnectFTP();
         }
         activity_inprogess = false;
@@ -298,7 +298,7 @@ namespace Actions
         if (!smbclient->Ping())
         {
             smbclient->Quit();
-            sprintf(status_message, lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
+            sprintf(status_message, "%s", lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
             return 0;
         }
 
@@ -442,7 +442,7 @@ namespace Actions
         if (!smbclient->Ping())
         {
             smbclient->Quit();
-            sprintf(status_message, lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
+            sprintf(status_message, "%s", lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
             return 0;
         }
 
@@ -584,6 +584,17 @@ namespace Actions
         int failed = 0;
         int success = 0;
         int skipped = 0;
+
+        sprintf(activity_message, "%s", lang_strings[STR_CHECK_HTTP_MSG]);
+        bool isUp = INSTALLER::HttpHostIsUp();
+        if (!isUp)
+        {
+            activity_inprogess = false;
+            multi_selected_remote_files.clear();
+            Windows::SetModalMode(false);
+            return NULL;
+        }
+        
         for (std::set<FsEntry>::iterator it = multi_selected_remote_files.begin(); it != multi_selected_remote_files.end(); ++it)
         {
             if (stop_activity)
@@ -661,8 +672,8 @@ namespace Actions
             smbclient->Quit();
         multi_selected_remote_files.clear();
         remote_files.clear();
-        sprintf(remote_directory, "/");
-        sprintf(status_message, "");
+        sprintf(remote_directory, "%s", "/");
+        sprintf(status_message, "%s", "");
     }
 
     void SelectAllLocalFiles()

@@ -438,7 +438,7 @@ std::vector<FsEntry> SmbClient::ListDir(const char *path)
 		case SMB2_TYPE_LINK:
 			entry.isLink = true;
 			entry.file_size = 0;
-			sprintf(entry.display_size, lang_strings[STR_LINK]);
+			sprintf(entry.display_size, "%s", lang_strings[STR_LINK]);
 			break;
 		case SMB2_TYPE_FILE:
 			if (entry.file_size < 1024)
@@ -461,7 +461,7 @@ std::vector<FsEntry> SmbClient::ListDir(const char *path)
 		case SMB2_TYPE_DIRECTORY:
 			entry.isDir = true;
 			entry.file_size = 0;
-			sprintf(entry.display_size, lang_strings[STR_FOLDER]);
+			sprintf(entry.display_size, "%s", lang_strings[STR_FOLDER]);
 			break;
 		}
 		if (strcmp(entry.name, "..") != 0 && strcmp(entry.name, ".") != 0)
