@@ -87,6 +87,7 @@ namespace CONFIG
 
         WriteString(last_site, CONFIG_SMB_SERVER_IP, smb_settings->server_ip);
         WriteInt(last_site, CONFIG_SMB_SERVER_PORT, smb_settings->server_port);
+        WriteInt(last_site, CONFIG_SMB_SERVER_HTTP_PORT, smb_settings->http_port);
         WriteString(last_site, CONFIG_SMB_SERVER_SHARE, smb_settings->share);
         WriteString(last_site, CONFIG_SMB_SERVER_USER, smb_settings->username);
         WriteString(last_site, CONFIG_SMB_SERVER_PASSWORD, smb_settings->password);

@@ -22,8 +22,6 @@
 
 #define SOCKET_BUFSIZ 1048576
 
-#include <dbglogger.h>
-
 std::mutex QueueLock;
 std::queue<int> event_queue; // Events are Socket Numbers
 
@@ -39,7 +37,6 @@ public:
         if (request->GetRequestType() == HTTP_GET || request->GetRequestType() == HTTP_HEAD)
         {
             std::string filepath = Request::UrlDecode(request->GetPath());
-            dbglogger_log("filepath=%s", filepath.c_str());
             if (filepath.empty() || !smbclient->IsConnected())
             {
                 std::string str = "HTTP/1.1 404\r\n\r\n";
@@ -212,21 +209,17 @@ void *HttpServer::ConnectionThread(void *argv)
         char buffer[3072] = {
             0};
         memset(buffer, 0, 3072);
-        dbglogger_log("before recv");
         int buffer_length = recv(socket_num, buffer, 3072, 0);
         if (buffer_length < 0)
         {
             perror("ERROR: Receiving Failure\n");
             return NULL;
         }
-        dbglogger_log("after recv");
 
         Request request(buffer, buffer_length);
 
-        dbglogger_log("after request");
         website.Handle(socket_num, &request);
         close(socket_num);
-        dbglogger_log("close socket");
     }
     return NULL;
 }
@@ -237,7 +230,6 @@ void *HttpServer::AcceptConnectionThread(void *argv)
     while (1)
     {
         int socket_num = server->AcceptConnection();
-        dbglogger_log("socket_num=%d", socket_num);
         QueueLock.lock();
         event_queue.push(socket_num);
         QueueLock.unlock();

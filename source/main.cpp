@@ -11,7 +11,7 @@
 #include <orbis/Pad.h>
 #include <orbis/AudioOut.h>
 #include <orbis/Net.h>
-#include <dbglogger.h>
+//#include <dbglogger.h>
 
 #include "imgui.h"
 #include "SDL2/SDL.h"
@@ -21,7 +21,6 @@
 #include "lang.h"
 #include "gui.h"
 #include "util.h"
-#include "http_server.h"
 #include "installer.h"
 
 extern "C"
@@ -168,8 +167,8 @@ static void terminate()
 
 int main()
 {
-	dbglogger_init();
-	dbglogger_log("If you see this you've set up dbglogger correctly.");
+	//dbglogger_init();
+	//dbglogger_log("If you see this you've set up dbglogger correctly.");
 	int rc;
 	// No buffering
 	setvbuf(stdout, NULL, _IONBF, 0);
@@ -242,17 +241,12 @@ int main()
 	}
 	atexit(terminate);
 
-	HttpServer *server = new HttpServer(0, 9090, 10);
-	server->Start();
-	
 	GUI::RenderLoop(renderer);
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 
 	ImGui::DestroyContext();
-	if (server != NULL)
-		delete(server);
 
 	return 0;
 }

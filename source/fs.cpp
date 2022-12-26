@@ -175,7 +175,7 @@ namespace FS
         memset(&entry, 0, sizeof(FsEntry));
         sprintf(entry.directory, "%s", path.c_str());
         sprintf(entry.name, "..");
-        sprintf(entry.display_size, lang_strings[STR_FOLDER]);
+        sprintf(entry.display_size, "%s",lang_strings[STR_FOLDER]);
         sprintf(entry.path, "%s", path.c_str());
         entry.file_size = 0;
         entry.isDir = true;
@@ -232,13 +232,13 @@ namespace FS
                 {
                     entry.isDir = true;
                     entry.file_size = 0;
-                    sprintf(entry.display_size, lang_strings[STR_FOLDER]);
+                    sprintf(entry.display_size, "%s",lang_strings[STR_FOLDER]);
                 }
                 else
                 {
                     if (entry.file_size < 1024)
                     {
-                        sprintf(entry.display_size, "%lldB", entry.file_size);
+                        sprintf(entry.display_size, "%luB", entry.file_size);
                     }
                     else if (entry.file_size < 1024 * 1024)
                     {

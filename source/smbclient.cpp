@@ -10,7 +10,6 @@
 #include <inttypes.h>
 #include <errno.h>
 #include <orbis/Net.h>
-#include <dbglogger.h>
 #include "lang.h"
 #include "smbclient.h"
 #include "windows.h"
@@ -253,12 +252,9 @@ int SmbClient::Copy(const char *ppath, int socket_fd)
 			free((void*)buff);
 			return 0;
 		}
-		dbglogger_log("before send data");
 		int ret = sceNetSend(socket_fd, buff, count, 0);
-		dbglogger_log("after send data count=0x%08X", ret);
 		if (ret < 0)
 		{
-			dbglogger_log("failed send count=%d", ret);
 			break;
 		}
 	}

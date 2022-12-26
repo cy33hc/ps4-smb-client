@@ -6,7 +6,6 @@
 #include <orbis/Bgft.h>
 #include <orbis/AppInstUtil.h>
 #include <orbis/UserService.h>
-#include <dbglogger.h>
 #include "installer.h"
 #include "util.h"
 #include "http_request.h"
@@ -40,14 +39,11 @@ namespace INSTALLER
 			memset(s_bgft_init_params.heap, 0, s_bgft_init_params.heapSize);
 		}
 
-		dbglogger_log("before sceBgftServiceIntInit");
 		ret = sceBgftServiceIntInit(&s_bgft_init_params);
 		if (ret)
 		{
-			dbglogger_log("error sceBgftServiceIntInit");
 			goto err_bgft_heap_free;
 		}
-		dbglogger_log("after sceBgftServiceIntInit");
 
 		s_bgft_initialized = true;
 
@@ -96,14 +92,14 @@ namespace INSTALLER
 		int ret;
 		char filepath[2000];
 		std::string filename = std::string(ffilename);
-		sprintf(filepath, "http://127.0.0.1:9090/%s", Util::Trim(filename, "/").c_str());
+		sprintf(filepath, "http://%s:%d/%s", smb_settings->server_ip, smb_settings->http_port,
+				Request::UrlEncode(Util::Trim(filename, "/")).c_str());
 		std::string cid = std::string((char *)header->pkg_content_id);
 		cid = cid.substr(cid.find_first_of("-") + 1, 9);
 		int user_id;
 		ret = sceUserServiceGetForegroundUser(&user_id);
 		const char *package_type;
 		uint32_t content_type = BE32(header->pkg_content_type);
-		dbglogger_log("content_type=%X", content_type);
 		switch (content_type)
 		{
 		case PKG_CONTENT_TYPE_GD:
@@ -120,11 +116,10 @@ namespace INSTALLER
 			break;
 		default:
 			package_type = NULL;
-			return -1;
+			return 0;
 			break;
 		}
 
-		dbglogger_log("filepath=%s, content_id=%s", filepath, cid.c_str());
 		OrbisBgftDownloadParam params;
 		memset(&params, 0, sizeof(params));
 		{
@@ -142,26 +137,22 @@ namespace INSTALLER
 		}
 
 		int task_id = -1;
-		dbglogger_log("before sceBgftServiceIntDownloadRegisterTask");
 		ret = sceBgftServiceIntDownloadRegisterTask(&params, &task_id);
 		if (ret)
 		{
-			dbglogger_log("err sceBgftServiceIntDownloadRegisterTask ret=0x%08X", ret);
 			goto err;
 		}
 
-		dbglogger_log("before sceBgftServiceDownloadStartTask");
 		ret = sceBgftServiceDownloadStartTask(task_id);
 		if (ret)
 		{
-			dbglogger_log("err sceBgftServiceDownloadStartTask ret=%d", ret);
 			goto err;
 		}
 
-		return 0;
+		return 1;
 
 	err:
-		return -1;
+		return 0;
 	}
 
 }

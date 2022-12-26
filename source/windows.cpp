@@ -30,6 +30,7 @@ static char *ime_single_field;
 static int ime_field_size;
 
 static char txt_server_port[6];
+static char txt_http_port[6];
 
 bool handle_updates = false;
 SmbClient *smbclient;
@@ -89,6 +90,7 @@ namespace Windows
         sprintf(local_filter, "");
         sprintf(remote_filter, "");
         sprintf(txt_server_port, "%d", smb_settings->server_port);
+        sprintf(txt_http_port, "%d", smb_settings->http_port);
         dont_prompt_overwrite = false;
         confirm_transfer_state = -1;
         dont_prompt_overwrite_cb = false;
@@ -185,7 +187,7 @@ namespace Windows
             ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
             ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.3f);
         }
-        if (ImGui::Button(lang_strings[STR_CONNECT_FTP], ImVec2(200, 0)))
+        if (ImGui::Button(lang_strings[STR_CONNECT_FTP], ImVec2(180, 0)))
         {
             smb_settings->server_port = atoi(txt_server_port);
             selected_action = ACTION_CONNECT_FTP;
@@ -239,6 +241,7 @@ namespace Windows
                     sprintf(display_site, "%s", site_id);
                     smb_settings = &site_settings[sites[n]];
                     sprintf(txt_server_port, "%d", smb_settings->server_port);
+                    sprintf(txt_http_port, "%d", smb_settings->http_port);
                 }
 
                 // Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -252,7 +255,7 @@ namespace Windows
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 1.0f));
         sprintf(id, "%s##serverip", smb_settings->server_ip);
         pos = ImGui::GetCursorPos();
-        if (ImGui::Button(id, ImVec2(250, 0)))
+        if (ImGui::Button(id, ImVec2(210, 0)))
         {
             ime_single_field = smb_settings->server_ip;
             ResetImeCallbacks();
@@ -269,7 +272,7 @@ namespace Windows
 
         pos = ImGui::GetCursorPos();
         sprintf(id, "%s##share", smb_settings->share);
-        if (ImGui::Button(id, ImVec2(250, 0)))
+        if (ImGui::Button(id, ImVec2(200, 0)))
         {
             ime_single_field = smb_settings->share;
             ResetImeCallbacks();
@@ -286,7 +289,7 @@ namespace Windows
 
         sprintf(id, "%s##username", smb_settings->username);
         pos = ImGui::GetCursorPos();
-        if (ImGui::Button(id, ImVec2(180, 0)))
+        if (ImGui::Button(id, ImVec2(140, 0)))
         {
             ime_single_field = smb_settings->username;
             ResetImeCallbacks();
@@ -327,7 +330,27 @@ namespace Windows
             ResetImeCallbacks();
             ime_field_size = 5;
             ime_callback = SingleValueImeCallback;
+            ime_after_update = AfterServerPortChangeCallback;
             Dialog::initImeDialog(lang_strings[STR_PORT], txt_server_port, 5, ORBIS_TYPE_NUMBER, pos.x, pos.y);
+            gui_mode = GUI_MODE_IME;
+        }
+        ImGui::SameLine();
+
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 5);
+        ImGui::TextColored(colors[ImGuiCol_ButtonHovered], "Http:");
+        ImGui::SameLine();
+
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() - 4);
+        sprintf(id, "%s##HttpPort", txt_http_port);
+        pos = ImGui::GetCursorPos();
+        if (ImGui::Button(id, ImVec2(70, 0)))
+        {
+            ime_single_field = txt_http_port;
+            ResetImeCallbacks();
+            ime_field_size = 5;
+            ime_callback = SingleValueImeCallback;
+            ime_after_update = AfterHttpPortChangeCallback;
+            Dialog::initImeDialog(lang_strings[STR_PORT], txt_http_port, 5, ORBIS_TYPE_NUMBER, pos.x, pos.y);
             gui_mode = GUI_MODE_IME;
         }
 
@@ -1172,6 +1195,8 @@ namespace Windows
             done = true;
             break;
         case ACTION_INSTALL:
+            activity_inprogess = true;
+            stop_activity = false;
             Actions::InstallPkgs();
             selected_action = ACTION_NONE;
             break;
@@ -1221,6 +1246,22 @@ namespace Windows
                 ResetImeCallbacks();
                 gui_mode = GUI_MODE_BROWSER;
             }
+        }
+    }
+
+    void AfterServerPortChangeCallback(int ime_result)
+    {
+        if (ime_result == IME_DIALOG_RESULT_FINISHED)
+        {
+            smb_settings->server_port = atoi(txt_server_port);
+        }
+    }
+
+    void AfterHttpPortChangeCallback(int ime_result)
+    {
+        if (ime_result == IME_DIALOG_RESULT_FINISHED)
+        {
+            smb_settings->http_port = atoi(txt_http_port);
         }
     }
 

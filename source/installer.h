@@ -34,6 +34,8 @@
 #define BE32(x) SWAP32(x)
 #define BE64(x) SWAP64(x)
 
+#define PKG_MAGIC 0x7F434E54
+
 typedef struct
 {
     uint32_t pkg_magic;                 // 0x000 - 0x7F434E54

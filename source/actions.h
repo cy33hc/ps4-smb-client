@@ -73,6 +73,7 @@ namespace Actions
     void DisconnectFTP();
     void SelectAllLocalFiles();
     void SelectAllRemoteFiles();
+    void *InstallPkgsThread(void *argp);
     void InstallPkgs();
 }
 

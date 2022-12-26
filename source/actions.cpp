@@ -9,7 +9,6 @@
 #include "lang.h"
 #include "actions.h"
 #include "installer.h"
-#include <dbglogger.h>
 
 namespace Actions
 {
@@ -580,22 +579,65 @@ namespace Actions
         }
     }
 
-    void InstallPkgs()
+    void *InstallPkgsThread(void *argp)
     {
+        int failed = 0;
+        int success = 0;
+        int skipped = 0;
         for (std::set<FsEntry>::iterator it = multi_selected_remote_files.begin(); it != multi_selected_remote_files.end(); ++it)
         {
+            if (stop_activity)
+                break;
+            sprintf(activity_message, "%s %s", lang_strings[STR_INSTALLING], it->name);
+
             if (!it->isDir)
             {
                 std::string path = std::string(it->path);
                 path = Util::ToLower(path);
-                if (path.find_last_of(".pkg") == path.size()-1)
+                if (path.size() > 4 && path.substr(path.size() - 4) == ".pkg")
                 {
                     pkg_header header;
-                    smbclient->Head(it->path, (void*)&header, sizeof(header));
-                    dbglogger_log("contentid=%s", header.pkg_content_id);
-                    INSTALLER::InstallPkg(it->path, &header);
+                    memset(&header, 0, sizeof(header));
+                    if (smbclient->Head(it->path, (void *)&header, sizeof(header)) == 0)
+                        failed++;
+                    else
+                    {
+                        if (BE32(header.pkg_magic) == PKG_MAGIC)
+                        {
+                            if (INSTALLER::InstallPkg(it->path, &header) == 0)
+                                failed++;
+                            else
+                                success++;
+                        }
+                        else
+                            skipped++;
+                    }
                 }
+                else
+                    skipped++;
             }
+            else
+                skipped++;
+
+            sprintf(status_message, "%s %s = %d, %s = %d, %s = %d", lang_strings[STR_INSTALL],
+                    lang_strings[STR_INSTALL_SUCCESS], success, lang_strings[STR_INSTALL_FAILED], failed,
+                    lang_strings[STR_INSTALL_SKIPPED], skipped);
+        }
+        activity_inprogess = false;
+        multi_selected_remote_files.clear();
+        Windows::SetModalMode(false);
+        return NULL;
+    }
+
+    void InstallPkgs()
+    {
+        sprintf(status_message, "%s", "");
+        int res = pthread_create(&bk_activity_thid, NULL, InstallPkgsThread, NULL);
+        if (res != 0)
+        {
+            activity_inprogess = false;
+            multi_selected_remote_files.clear();
+            Windows::SetModalMode(false);
         }
     }
 

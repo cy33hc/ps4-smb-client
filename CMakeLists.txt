@@ -11,7 +11,6 @@ add_executable(ps4_smb_client
   source/fs.cpp
   source/gui.cpp
   source/http_request.cpp
-  source/http_server.cpp
   source/ime_dialog.cpp
   source/inifile.c
   source/installer.cpp

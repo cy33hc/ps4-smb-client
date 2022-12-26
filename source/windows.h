@@ -198,6 +198,8 @@ namespace Windows
     void AfterRemoteFileChangesCallback(int ime_result);
     void AfterFolderNameCallback(int ime_result);
     void CancelActionCallBack(int ime_result);
+    void AfterHttpPortChangeCallback(int ime_result);
+    void AfterServerPortChangeCallback(int ime_result);
 }
 
 #endif

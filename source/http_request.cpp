@@ -2,7 +2,6 @@
 #include <vector>
 #include "http_request.h"
 #include "util.h"
-#include <dbglogger.h>
 
 /* Converts a hex character to its integer value */
 char Request::FromHex(char ch)
@@ -160,7 +159,6 @@ void Request::HeaderParser(std::vector<std::string> &lines)
 
 void Request::UrlParser(std::string url)
 {
-    dbglogger_log("url=%s", url.c_str());
     size_t params_start = url.find_first_of("?");
 
     url_path = url.substr(0, params_start);
@@ -185,7 +183,6 @@ void Request::UrlParser(std::string url)
             std::string name = param.substr(0, equal_pos);
             std::string value = param.substr(equal_pos+1);
             request_inputs[name] = value;
-            dbglogger_log("name=%s, value=%s", name.c_str(), value.c_str());
         }
         params = params.substr(param_separator_pos+1);
     }
