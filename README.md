@@ -17,6 +17,12 @@ R1 - Navigate to the Remote list of files
 L1 - Navigate to the Local list of files
 TouchPad Button - Exit Application
 ```
+
+## Remote Package Installer Feature
+Remote Package Installation is supported if you setup SMB and a HTTP Server on the same machine. You also need to make sure the SMB and HTTP Server share the exact same folder.
+
+Example: If you share the folder C:\MyShare for SMB, then also make sure the C:\MyShare is the root folder for the HTTP Server.
+
 ## Known Issues
 - Rename of files and folders in subdirectories fails for Windows Shares. Works with SMB shares.
 
