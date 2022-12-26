@@ -20,7 +20,7 @@ TouchPad Button - Exit Application
 
 ## Remote Package Installer Feature
 Remote Package Installation is supported if you setup SMB and a HTTP Server on the same machine. You also need to make sure the SMB and HTTP Server share the exact same folder.
-
+**HELP - Need new translations for the added strings. Please help update the languages files. Use the English.ini for reference**
 **No need for "Remote Package Installer" homebrew and "Remote Package Sender" from PC.**
 
 Example: If you share the folder C:\MyShare for SMB, then also make sure the C:\MyShare is the root folder for the HTTP Server.
