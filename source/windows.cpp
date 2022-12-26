@@ -255,7 +255,7 @@ namespace Windows
         ImGui::PushStyleVar(ImGuiStyleVar_ButtonTextAlign, ImVec2(0.0f, 1.0f));
         sprintf(id, "%s##serverip", smb_settings->server_ip);
         pos = ImGui::GetCursorPos();
-        if (ImGui::Button(id, ImVec2(210, 0)))
+        if (ImGui::Button(id, ImVec2(200, 0)))
         {
             ime_single_field = smb_settings->server_ip;
             ResetImeCallbacks();
@@ -272,7 +272,7 @@ namespace Windows
 
         pos = ImGui::GetCursorPos();
         sprintf(id, "%s##share", smb_settings->share);
-        if (ImGui::Button(id, ImVec2(200, 0)))
+        if (ImGui::Button(id, ImVec2(290, 0)))
         {
             ime_single_field = smb_settings->share;
             ResetImeCallbacks();
