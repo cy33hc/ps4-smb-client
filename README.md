@@ -27,7 +27,7 @@ Example: If you share the folder C:\MyShare for SMB, then also make sure the C:\
 
 **HTTP Servers known to work with RPI.**
 
-[Leefull's exploit host](https://github.com/Leeful/leeful.github.io/blob/master/Exploit%20Host%20Server%20v1.2.exe) Place the "Exploit Host Server v1.2.ext" into the SMB share folder and execute.
+[Leefull's exploit host](https://github.com/Leeful/leeful.github.io/blob/master/Exploit%20Host%20Server%20v1.2.exe) Place the "Exploit Host Server v1.2.exe" into the SMB share folder and execute.
 
 Microsoft IIS
 
