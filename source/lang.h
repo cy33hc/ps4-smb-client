@@ -71,8 +71,8 @@
 	FUNC(STR_FAIL_CREATE_LOCAL_FILE_MSG) \
 	FUNC(STR_INSTALL)                    \
 	FUNC(STR_INSTALLING)                 \
-	FUNC(STR_INSTALL_SUCCESS)                    \
-	FUNC(STR_INSTALL_FAILED)                     \
+	FUNC(STR_INSTALL_SUCCESS)            \
+	FUNC(STR_INSTALL_FAILED)             \
 	FUNC(STR_INSTALL_SKIPPED)
 
 #define GET_VALUE(x) x,
@@ -83,8 +83,8 @@ enum
 	FOREACH_STR(GET_VALUE)
 };
 
-#define LANG_STRINGS_NUM 70
-#define LANG_ID_SIZE 70
+#define LANG_STRINGS_NUM 65
+#define LANG_ID_SIZE 65
 #define LANG_STR_SIZE 256
 extern char lang_identifiers[LANG_STRINGS_NUM][LANG_ID_SIZE];
 extern char lang_strings[LANG_STRINGS_NUM][LANG_STR_SIZE];
