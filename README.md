@@ -33,6 +33,8 @@ Example: If you share the folder C:\MyShare for SMB, then also make sure the C:\
 
 Microsoft IIS
 
+[npx serve](https://www.npmjs.com/package/serve)
+
 ## Known Issues
 - Rename of files and folders in subdirectories fails for Windows Shares. Works with SMB shares.
 
