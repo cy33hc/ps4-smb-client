@@ -82,7 +82,9 @@ char lang_strings[LANG_STRINGS_NUM][LANG_STR_SIZE] = {
 	"Skipped",														  // STR_INSTALL_SKIPPED
 	"Checking connection to remote HTTP Server",					  // STR_CHECK_HTTP_MSG
 	"Failed connecting to HTTP Server",								  // STR_FAILED_HTTP_CHECK
-	"Remote is not a HTTP Server"									  // STR_REMOTE_NOT_HTTP
+	"Remote is not a HTTP Server",									  // STR_REMOTE_NOT_HTTP
+	"Package not in the /data or /mnt/usbX folder",					  // STR_INSTALL_FROM_DATA_MSG
+	"Package is already installed"									  // STR_ALREADY_INSTALLED_MSG
 };
 
 bool needs_extended_font = false;

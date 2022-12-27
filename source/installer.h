@@ -99,6 +99,7 @@ namespace INSTALLER
     int Init(void);
     void Exit(void);
 
-    int InstallPkg(const char *filename, pkg_header *header);
+    int InstallRemotePkg(const char *filename, pkg_header *header);
+    int InstallLocalPkg(const char *filename, pkg_header *header);
     bool HttpHostIsUp();
 }

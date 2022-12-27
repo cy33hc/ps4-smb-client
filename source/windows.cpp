@@ -805,6 +805,16 @@ namespace Windows
                 }
                 ImGui::PopID();
                 ImGui::Separator();
+
+                ImGui::PushID("Install##local");
+                if (ImGui::Selectable(lang_strings[STR_INSTALL], false, flags | ImGuiSelectableFlags_DontClosePopups, ImVec2(220, 0)))
+                {
+                    SetModalMode(false);
+                    selected_action = ACTION_INSTALL_LOCAL_PKG;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::PopID();
+                ImGui::Separator();
             }
 
             if (remote_browser_selected)
@@ -825,11 +835,11 @@ namespace Windows
                 ImGui::PopID();
                 ImGui::Separator();
 
-                ImGui::PushID("Install##settings");
+                ImGui::PushID("Install##remote");
                 if (ImGui::Selectable(lang_strings[STR_INSTALL], false, flags | ImGuiSelectableFlags_DontClosePopups, ImVec2(220, 0)))
                 {
                     SetModalMode(false);
-                    selected_action = ACTION_INSTALL;
+                    selected_action = ACTION_INSTALL_REMOTE_PKG;
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::PopID();
@@ -1194,10 +1204,16 @@ namespace Windows
             Actions::DisconnectFTP();
             done = true;
             break;
-        case ACTION_INSTALL:
+        case ACTION_INSTALL_REMOTE_PKG:
             activity_inprogess = true;
             stop_activity = false;
-            Actions::InstallPkgs();
+            Actions::InstallRemotePkgs();
+            selected_action = ACTION_NONE;
+            break;
+        case ACTION_INSTALL_LOCAL_PKG:
+            activity_inprogess = true;
+            stop_activity = false;
+            Actions::InstallLocalPkgs();
             selected_action = ACTION_NONE;
             break;
         default:

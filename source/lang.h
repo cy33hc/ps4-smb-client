@@ -76,7 +76,9 @@
 	FUNC(STR_INSTALL_SKIPPED)            \
 	FUNC(STR_CHECK_HTTP_MSG)             \
 	FUNC(STR_FAILED_HTTP_CHECK)          \
-	FUNC(STR_REMOTE_NOT_HTTP)
+	FUNC(STR_REMOTE_NOT_HTTP)            \
+	FUNC(STR_INSTALL_FROM_DATA_MSG)      \
+	FUNC(STR_ALREADY_INSTALLED_MSG)
 
 #define GET_VALUE(x) x,
 #define GET_STRING(x) #x,
@@ -86,8 +88,8 @@ enum
 	FOREACH_STR(GET_VALUE)
 };
 
-#define LANG_STRINGS_NUM 73
-#define LANG_ID_SIZE 73
+#define LANG_STRINGS_NUM 75
+#define LANG_ID_SIZE LANG_STRINGS_NUM
 #define LANG_STR_SIZE 256
 extern char lang_identifiers[LANG_STRINGS_NUM][LANG_ID_SIZE];
 extern char lang_strings[LANG_STRINGS_NUM][LANG_STR_SIZE];

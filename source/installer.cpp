@@ -92,7 +92,7 @@ namespace INSTALLER
 		s_bgft_initialized = false;
 	}
 
-	int InstallPkg(const char *ffilename, pkg_header *header)
+	int InstallRemotePkg(const char *ffilename, pkg_header *header)
 	{
 		int ret;
 		char filepath[2000];
@@ -160,6 +160,62 @@ namespace INSTALLER
 		return 0;
 	}
 
+	int InstallLocalPkg(const char *filename, pkg_header *header)
+	{
+		int ret;
+
+		if (strncmp(filename, "/data/", 6) != 0 &&
+			strncmp(filename, "/user/data/", 11) != 0 &&
+			strncmp(filename, "/mnt/usb", 8) != 0)
+			return -1;
+
+		char filepath[1024];
+		snprintf(filepath, 1023, "%s", filename);
+		if (strncmp(filename, "/data/", 6) == 0)
+			snprintf(filepath, 1023, "/user%s", filename);
+		char titleId[18];
+		memset(titleId, 0, sizeof(titleId));
+		int is_app = -1;
+		ret = sceAppInstUtilGetTitleIdFromPkg(filename, titleId, &is_app);
+		if (ret)
+		{
+			return 0;
+		}
+
+		OrbisBgftDownloadParamEx download_params;
+		memset(&download_params, 0, sizeof(download_params));
+		{
+			download_params.params.entitlementType = 5;
+			download_params.params.id = "";
+			download_params.params.contentUrl = filepath;
+			download_params.params.contentName = titleId;
+			download_params.params.iconPath = "";
+			download_params.params.playgoScenarioId = "0";
+			download_params.params.option = ORBIS_BGFT_TASK_OPT_DISABLE_CDN_QUERY_PARAM;
+			download_params.slot = 0;
+		}
+
+		int task_id = -1;
+		ret = sceBgftServiceIntDownloadRegisterTaskByStorageEx(&download_params, &task_id);
+		if (ret)
+		{
+			if (ret = 0x80990088)
+				return -2;
+			goto err;
+		}
+
+		ret = sceBgftServiceDownloadStartTask(task_id);
+		if (ret)
+		{
+			goto err;
+		}
+
+		return 1;
+
+	err:
+		return 0;
+	}
+
 	bool HttpHostIsUp()
 	{
 		int http_socket;
@@ -191,7 +247,7 @@ namespace INSTALLER
 			goto err;
 		}
 
-		retval = setsockopt(http_socket, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof(tv));
+		retval = setsockopt(http_socket, SOL_SOCKET, SO_RCVTIMEO, (const char *)&tv, sizeof(tv));
 		if (retval == -1)
 		{
 			sprintf(status_message, "%s", lang_strings[STR_FAILED_HTTP_CHECK]);
@@ -204,7 +260,7 @@ namespace INSTALLER
 			sprintf(status_message, "%s", lang_strings[STR_FAILED_HTTP_CHECK]);
 			goto err;
 		}
-		
+
 		retval = send(http_socket, message.c_str(), message.size(), MSG_CONFIRM);
 		if (retval < 0)
 		{

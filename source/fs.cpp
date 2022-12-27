@@ -405,4 +405,17 @@ namespace FS
         path2 = Util::Rtrim(Util::Trim(path2, " "), "/");
         return path1 + "/" + path2;
     }
+
+    int Head(const std::string &path, void* buffer, uint16_t len)
+    {
+        FILE *file = OpenRead(path);
+        int ret = Read(file, buffer, len);
+        if (ret != len)
+        {
+            Close(file);
+            return 0;
+        }
+        Close(file);
+        return 1;
+    }
 }

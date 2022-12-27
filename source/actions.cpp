@@ -579,7 +579,7 @@ namespace Actions
         }
     }
 
-    void *InstallPkgsThread(void *argp)
+    void *InstallRemotePkgsThread(void *argp)
     {
         int failed = 0;
         int success = 0;
@@ -615,7 +615,7 @@ namespace Actions
                     {
                         if (BE32(header.pkg_magic) == PKG_MAGIC)
                         {
-                            if (INSTALLER::InstallPkg(it->path, &header) == 0)
+                            if (INSTALLER::InstallRemotePkg(it->path, &header) == 0)
                                 failed++;
                             else
                                 success++;
@@ -640,14 +640,90 @@ namespace Actions
         return NULL;
     }
 
-    void InstallPkgs()
+    void InstallRemotePkgs()
     {
         sprintf(status_message, "%s", "");
-        int res = pthread_create(&bk_activity_thid, NULL, InstallPkgsThread, NULL);
+        int res = pthread_create(&bk_activity_thid, NULL, InstallRemotePkgsThread, NULL);
         if (res != 0)
         {
             activity_inprogess = false;
             multi_selected_remote_files.clear();
+            Windows::SetModalMode(false);
+        }
+    }
+
+    void *InstallLocalPkgsThread(void *argp)
+    {
+        int failed = 0;
+        int success = 0;
+        int skipped = 0;
+        int ret;
+
+        for (std::set<FsEntry>::iterator it = multi_selected_local_files.begin(); it != multi_selected_local_files.end(); ++it)
+        {
+            if (stop_activity)
+                break;
+            sprintf(activity_message, "%s %s", lang_strings[STR_INSTALLING], it->name);
+
+            if (!it->isDir)
+            {
+                std::string path = std::string(it->path);
+                path = Util::ToLower(path);
+                if (path.size() > 4 && path.substr(path.size() - 4) == ".pkg")
+                {
+                    pkg_header header;
+                    memset(&header, 0, sizeof(header));
+                    if (FS::Head(it->path, (void *)&header, sizeof(header)) == 0)
+                        failed++;
+                    else
+                    {
+                        if (BE32(header.pkg_magic) == PKG_MAGIC)
+                        {
+                            if ((ret = INSTALLER::InstallLocalPkg(it->path, &header)) <= 0)
+                            {
+                                if (ret == -1)
+                                {
+                                    sprintf(activity_message, "%s - %s", it->name, lang_strings[STR_INSTALL_FROM_DATA_MSG]);
+                                    sceKernelUsleep(3000000);
+                                }
+                                else if (ret == -2)
+                                {
+                                    sprintf(activity_message, "%s - %s", it->name, lang_strings[STR_ALREADY_INSTALLED_MSG]);
+                                    sceKernelUsleep(3000000);
+                                }
+                                failed++;
+                            }
+                            else
+                                success++;
+                        }
+                        else
+                            skipped++;
+                    }
+                }
+                else
+                    skipped++;
+            }
+            else
+                skipped++;
+
+            sprintf(status_message, "%s %s = %d, %s = %d, %s = %d", lang_strings[STR_INSTALL],
+                    lang_strings[STR_INSTALL_SUCCESS], success, lang_strings[STR_INSTALL_FAILED], failed,
+                    lang_strings[STR_INSTALL_SKIPPED], skipped);
+        }
+        activity_inprogess = false;
+        multi_selected_local_files.clear();
+        Windows::SetModalMode(false);
+        return NULL;
+    }
+
+    void InstallLocalPkgs()
+    {
+        sprintf(status_message, "%s", "");
+        int res = pthread_create(&bk_activity_thid, NULL, InstallLocalPkgsThread, NULL);
+        if (res != 0)
+        {
+            activity_inprogess = false;
+            multi_selected_local_files.clear();
             Windows::SetModalMode(false);
         }
     }

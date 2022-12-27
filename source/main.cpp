@@ -196,6 +196,11 @@ int main()
 		return 0;
 	}
 
+	ret = sceSysmoduleLoadModuleInternal(ORBIS_SYSMODULE_INTERNAL_APP_INST_UTIL);
+	if (ret) {
+		return 0;
+	}
+
 	if (sceSysmoduleLoadModuleInternal(ORBIS_SYSMODULE_INTERNAL_PAD) < 0)
 		return 0;
 
