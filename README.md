@@ -94,6 +94,8 @@ openssl - https://github.com/cy33hc/ps4-openssl/tree/OpenSSL_1_1_1-ps4
 
 libsmb2 - https://github.com/cy33hc/libsmb2/tree/ps4
 
+libjbc - https://github.com/cy33hc/ps4-libjbc/blob/master/README_PS4.md
+
 ```
 1. Download the pacbrew-pacman from following location and install.
    https://github.com/PacBrew/pacbrew-pacman/releases
