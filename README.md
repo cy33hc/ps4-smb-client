@@ -90,9 +90,9 @@ or any other language that you have a traslation for.
 Before build the app, you need to build the dependencies first.
 Clone the following Git repos and build them in order
 
-openssl - https://github.com/cy33hc/ps4-openssl/tree/OpenSSL_1_1_1-ps4
+openssl - https://github.com/cy33hc/ps4-openssl/blob/OpenSSL_1_1_1-ps4/README_PS4.md
 
-libsmb2 - https://github.com/cy33hc/libsmb2/tree/ps4
+libsmb2 - https://github.com/cy33hc/libsmb2/blob/ps4/README_PS4.md
 
 libjbc - https://github.com/cy33hc/ps4-libjbc/blob/master/README_PS4.md
 
