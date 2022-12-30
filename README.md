@@ -35,9 +35,6 @@ Microsoft IIS
 
 [npx serve](https://www.npmjs.com/package/serve)
 
-## Known Issues
-- Rename of files and folders in subdirectories fails for Windows Shares. Works with SMB shares.
-
 ## Multi Language Support
 The appplication support following languages
 
