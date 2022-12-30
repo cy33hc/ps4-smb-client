@@ -274,7 +274,7 @@ namespace Actions
         else
         {
             sprintf(status_message, "%s", lang_strings[STR_CONNECTION_CLOSE_ERR_MSG]);
-            DisconnectFTP();
+            DisconnectSMB();
         }
         activity_inprogess = false;
         Windows::SetModalMode(false);
@@ -728,7 +728,7 @@ namespace Actions
         }
     }
 
-    void ConnectFTP()
+    void ConnectSMB()
     {
         CONFIG::SaveConfig();
         if (smbclient->Connect(smb_settings->server_ip, smb_settings->server_port, smb_settings->share, smb_settings->username, smb_settings->password))
@@ -742,7 +742,7 @@ namespace Actions
         selected_action = ACTION_NONE;
     }
 
-    void DisconnectFTP()
+    void DisconnectSMB()
     {
         if (smbclient->IsConnected())
             smbclient->Quit();

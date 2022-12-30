@@ -32,9 +32,9 @@ enum ACTIONS
     ACTION_REMOTE_SELECT_ALL,
     ACTION_LOCAL_CLEAR_ALL,
     ACTION_REMOTE_CLEAR_ALL,
-    ACTION_CONNECT_FTP,
-    ACTION_DISCONNECT_FTP,
-    ACTION_DISCONNECT_FTP_AND_EXIT,
+    ACTION_CONNECT_SMB,
+    ACTION_DISCONNECT_SMB,
+    ACTION_DISCONNECT_SMB_AND_EXIT,
     ACTION_INSTALL_REMOTE_PKG,
     ACTION_INSTALL_LOCAL_PKG
 };
@@ -47,7 +47,6 @@ enum OverWriteType
 };
 
 static pthread_t bk_activity_thid;
-static pthread_t ftp_keep_alive_thid;
 
 namespace Actions
 {
@@ -70,8 +69,8 @@ namespace Actions
     void UploadFiles();
     void *DownloadFilesThread(void *argp);
     void DownloadFiles();
-    void ConnectFTP();
-    void DisconnectFTP();
+    void ConnectSMB();
+    void DisconnectSMB();
     void SelectAllLocalFiles();
     void SelectAllRemoteFiles();
     void *InstallRemotePkgsThread(void *argp);

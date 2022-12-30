@@ -74,12 +74,6 @@ bool cur_down[21] = {false, false, false, false, false, false, false, false, fal
 namespace Windows
 {
 
-    static int FtpCallback(int64_t xfered, void *arg)
-    {
-        bytes_transfered = xfered;
-        return 1;
-    }
-
     void Init()
     {
         smbclient = new SmbClient();
@@ -149,7 +143,7 @@ namespace Windows
 
         if (prev_down[SDL_CONTROLLER_BUTTON_START] && !cur_down[SDL_CONTROLLER_BUTTON_START] && !paused)
         {
-            selected_action = ACTION_DISCONNECT_FTP_AND_EXIT;
+            selected_action = ACTION_DISCONNECT_SMB_AND_EXIT;
         }
 
         prev_down[SDL_CONTROLLER_BUTTON_X] = cur_down[SDL_CONTROLLER_BUTTON_X];
@@ -187,10 +181,10 @@ namespace Windows
             ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
             ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.3f);
         }
-        if (ImGui::Button(lang_strings[STR_CONNECT_FTP], ImVec2(180, 0)))
+        if (ImGui::Button(lang_strings[STR_CONNECT_SMB], ImVec2(180, 0)))
         {
             smb_settings->server_port = atoi(txt_server_port);
-            selected_action = ACTION_CONNECT_FTP;
+            selected_action = ACTION_CONNECT_SMB;
         }
         if (is_connected)
         {
@@ -200,7 +194,7 @@ namespace Windows
         if (ImGui::IsItemHovered())
         {
             ImGui::BeginTooltip();
-            ImGui::Text("%s", lang_strings[STR_CONNECT_FTP]);
+            ImGui::Text("%s", lang_strings[STR_CONNECT_SMB]);
             ImGui::EndTooltip();
         }
         ImGui::SameLine();
@@ -210,9 +204,9 @@ namespace Windows
             ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
             ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.3f);
         }
-        if (ImGui::Button(lang_strings[STR_DISCONNECT_FTP], ImVec2(200, 0)))
+        if (ImGui::Button(lang_strings[STR_DISCONNECT_SMB], ImVec2(200, 0)))
         {
-            selected_action = ACTION_DISCONNECT_FTP;
+            selected_action = ACTION_DISCONNECT_SMB;
         }
         if (!is_connected)
         {
@@ -222,7 +216,7 @@ namespace Windows
         if (ImGui::IsItemHovered())
         {
             ImGui::BeginTooltip();
-            ImGui::Text("%s", lang_strings[STR_DISCONNECT_FTP]);
+            ImGui::Text("%s", lang_strings[STR_DISCONNECT_SMB]);
             ImGui::EndTooltip();
         }
         ImGui::SameLine();
@@ -1059,7 +1053,7 @@ namespace Windows
         (void)io;
         ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 
-        if (ImGui::Begin("Ftp Client", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar))
+        if (ImGui::Begin("SMB Client", nullptr, ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar))
         {
             ConnectionPanel();
             ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3);
@@ -1194,14 +1188,14 @@ namespace Windows
             multi_selected_remote_files.clear();
             selected_action = ACTION_NONE;
             break;
-        case ACTION_CONNECT_FTP:
-            Actions::ConnectFTP();
+        case ACTION_CONNECT_SMB:
+            Actions::ConnectSMB();
             break;
-        case ACTION_DISCONNECT_FTP:
-            Actions::DisconnectFTP();
+        case ACTION_DISCONNECT_SMB:
+            Actions::DisconnectSMB();
             break;
-        case ACTION_DISCONNECT_FTP_AND_EXIT:
-            Actions::DisconnectFTP();
+        case ACTION_DISCONNECT_SMB_AND_EXIT:
+            Actions::DisconnectSMB();
             done = true;
             break;
         case ACTION_INSTALL_REMOTE_PKG:
