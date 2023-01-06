@@ -17,6 +17,7 @@ add_executable(ps4_smb_client
   source/lang.cpp
   source/main.cpp
   source/orbis_jbc.c
+  source/rtc.cpp
   source/windows.cpp
   source/smbclient.cpp
   source/imgui_draw.cpp
@@ -29,7 +30,7 @@ add_executable(ps4_smb_client
 
 add_self(ps4_smb_client)
 
-add_pkg(ps4_smb_client ${CMAKE_SOURCE_DIR}/data "SMBC00001" "PS4 SMB Client" "01.05" 32 0)
+add_pkg(ps4_smb_client ${CMAKE_SOURCE_DIR}/data "SMBC00001" "PS4 SMB Client" "01.06" 32 0)
 
 target_link_libraries(ps4_smb_client
   c

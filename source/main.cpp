@@ -20,6 +20,7 @@
 #include "config.h"
 #include "lang.h"
 #include "gui.h"
+#include "rtc.h"
 #include "util.h"
 #include "installer.h"
 
@@ -244,6 +245,10 @@ int main()
 	{
 		terminate();
 	}
+
+	if (load_rtc_module() != 0)
+		return 0;
+
 	atexit(terminate);
 
 	GUI::RenderLoop(renderer);
