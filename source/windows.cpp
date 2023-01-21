@@ -162,7 +162,7 @@ namespace Windows
         ImGuiStyle *style = &ImGui::GetStyle();
         ImVec4 *colors = style->Colors;
         static char title[32];
-        sprintf(title, "%s", lang_strings[STR_CONNECTION_SETTINGS]);
+        sprintf(title, "SMB %s", lang_strings[STR_CONNECTION_SETTINGS]);
         BeginGroupPanel(title, ImVec2(1905, 100));
         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 10);
         char id[256];
