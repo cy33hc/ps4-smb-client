@@ -75,6 +75,23 @@ void InitImgui()
 		0,
 	};
 
+	static const ImWchar arabic[] = { // Arabic
+		0x0020, 0x00FF, // Basic Latin + Latin Supplement
+		0x0100, 0x024F, // Latin Extended
+		0x0400, 0x052F, // Cyrillic + Cyrillic Supplement
+		0x1E00, 0x1EFF, // Latin Extended Additional
+		0x2000, 0x206F, // General Punctuation
+		0x2100, 0x214F, // Letterlike Symbols
+		0x2460, 0x24FF, // Enclosed Alphanumerics
+		0x0600, 0x06FF, // Arabic
+		0x0750, 0x077F, // Arabic Supplement
+		0x0870, 0x089F, // Arabic Extended-B
+		0x08A0, 0x08FF, // Arabic Extended-A
+		0xFB50, 0xFDFF, // Arabic Presentation Forms-A
+		0xFE70, 0xFEFF, // Arabic Presentation Forms-B
+		0,
+	};
+
 	std::string lang = std::string(language);
 	int32_t lang_idx;
 	sceSystemServiceParamGetInt( ORBIS_SYSTEM_SERVICE_PARAM_ID_LANG, &lang_idx );
@@ -107,6 +124,10 @@ void InitImgui()
 	else if (lang.compare("Greek") == 0 || (lang.empty() && lang_idx == ORBIS_SYSTEM_PARAM_LANG_GREEK))
 	{
 		io.Fonts->AddFontFromFileTTF("/app0/assets/fonts/Roboto_ext.ttf", 26.0f, NULL, io.Fonts->GetGlyphRangesGreek());
+	}
+	else if (lang.compare("Arabic") == 0 || (lang.empty() && lang_idx == ORBIS_SYSTEM_PARAM_LANG_ARABIC))
+	{
+		io.Fonts->AddFontFromFileTTF("/app0/assets/fonts/Roboto_ext.ttf", 26.0f, NULL, arabic);
 	}
 	else
 	{
