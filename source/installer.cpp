@@ -199,7 +199,7 @@ namespace INSTALLER
 		ret = sceBgftServiceIntDownloadRegisterTaskByStorageEx(&download_params, &task_id);
 		if (ret)
 		{
-			if (ret = 0x80990088)
+			if (ret == 0x80990088)
 				return -2;
 			goto err;
 		}
