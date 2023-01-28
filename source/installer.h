@@ -1,30 +1,24 @@
 #pragma once
 
-#define SWAP16(x) \
-	((uint16_t)( \
-		(((uint16_t)(x) & UINT16_C(0x00FF)) << 8) | \
-		(((uint16_t)(x) & UINT16_C(0xFF00)) >> 8) \
-	))
+#define SWAP16(x)                                         \
+    ((uint16_t)((((uint16_t)(x)&UINT16_C(0x00FF)) << 8) | \
+                (((uint16_t)(x)&UINT16_C(0xFF00)) >> 8)))
 
-#define SWAP32(x) \
-	((uint32_t)( \
-		(((uint32_t)(x) & UINT32_C(0x000000FF)) << 24) | \
-		(((uint32_t)(x) & UINT32_C(0x0000FF00)) <<  8) | \
-		(((uint32_t)(x) & UINT32_C(0x00FF0000)) >>  8) | \
-		(((uint32_t)(x) & UINT32_C(0xFF000000)) >> 24) \
-	))
+#define SWAP32(x)                                              \
+    ((uint32_t)((((uint32_t)(x)&UINT32_C(0x000000FF)) << 24) | \
+                (((uint32_t)(x)&UINT32_C(0x0000FF00)) << 8) |  \
+                (((uint32_t)(x)&UINT32_C(0x00FF0000)) >> 8) |  \
+                (((uint32_t)(x)&UINT32_C(0xFF000000)) >> 24)))
 
-#define SWAP64(x) \
-	((uint64_t)( \
-		(uint64_t)(((uint64_t)(x) & UINT64_C(0x00000000000000FF)) << 56) | \
-		(uint64_t)(((uint64_t)(x) & UINT64_C(0x000000000000FF00)) << 40) | \
-		(uint64_t)(((uint64_t)(x) & UINT64_C(0x0000000000FF0000)) << 24) | \
-		(uint64_t)(((uint64_t)(x) & UINT64_C(0x00000000FF000000)) <<  8) | \
-		(uint64_t)(((uint64_t)(x) & UINT64_C(0x000000FF00000000)) >>  8) | \
-		(uint64_t)(((uint64_t)(x) & UINT64_C(0x0000FF0000000000)) >> 24) | \
-		(uint64_t)(((uint64_t)(x) & UINT64_C(0x00FF000000000000)) >> 40) | \
-		(uint64_t)(((uint64_t)(x) & UINT64_C(0xFF00000000000000)) >> 56) \
-	))
+#define SWAP64(x)                                                                \
+    ((uint64_t)((uint64_t)(((uint64_t)(x)&UINT64_C(0x00000000000000FF)) << 56) | \
+                (uint64_t)(((uint64_t)(x)&UINT64_C(0x000000000000FF00)) << 40) | \
+                (uint64_t)(((uint64_t)(x)&UINT64_C(0x0000000000FF0000)) << 24) | \
+                (uint64_t)(((uint64_t)(x)&UINT64_C(0x00000000FF000000)) << 8) |  \
+                (uint64_t)(((uint64_t)(x)&UINT64_C(0x000000FF00000000)) >> 8) |  \
+                (uint64_t)(((uint64_t)(x)&UINT64_C(0x0000FF0000000000)) >> 24) | \
+                (uint64_t)(((uint64_t)(x)&UINT64_C(0x00FF000000000000)) >> 40) | \
+                (uint64_t)(((uint64_t)(x)&UINT64_C(0xFF00000000000000)) >> 56)))
 
 #define LE16(x) (x)
 #define LE32(x) (x)
@@ -35,6 +29,17 @@
 #define BE64(x) SWAP64(x)
 
 #define PKG_MAGIC 0x7F434E54
+
+#define PKG_CONTENT_FLAGS_FIRST_PATCH 0x00100000
+#define PKG_CONTENT_FLAGS_PATCHGO 0x00200000
+#define PKG_CONTENT_FLAGS_REMASTER 0x00400000
+#define PKG_CONTENT_FLAGS_PS_CLOUD 0x00800000
+#define PKG_CONTENT_FLAGS_GD_AC 0x02000000
+#define PKG_CONTENT_FLAGS_NON_GAME 0x04000000
+#define PKG_CONTENT_FLAGS_0x8000000 0x08000000 /* has data? */
+#define PKG_CONTENT_FLAGS_SUBSEQUENT_PATCH 0x40000000
+#define PKG_CONTENT_FLAGS_DELTA_PATCH 0x41000000
+#define PKG_CONTENT_FLAGS_CUMULATIVE_PATCH 0x60000000
 
 typedef struct
 {
@@ -87,11 +92,12 @@ typedef struct
     unsigned char pkg_digest[0x20];        // 0xFE0
 } pkg_header;
 
-enum pkg_content_type {
-	PKG_CONTENT_TYPE_GD = 0x1A, /* pkg_ps4_app, pkg_ps4_patch, pkg_ps4_remaster */
-	PKG_CONTENT_TYPE_AC = 0x1B, /* pkg_ps4_ac_data, pkg_ps4_sf_theme, pkg_ps4_theme */
-	PKG_CONTENT_TYPE_AL = 0x1C, /* pkg_ps4_ac_nodata */
-	PKG_CONTENT_TYPE_DP = 0x1E, /* pkg_ps4_delta_patch */
+enum pkg_content_type
+{
+    PKG_CONTENT_TYPE_GD = 0x1A, /* pkg_ps4_app, pkg_ps4_patch, pkg_ps4_remaster */
+    PKG_CONTENT_TYPE_AC = 0x1B, /* pkg_ps4_ac_data, pkg_ps4_sf_theme, pkg_ps4_theme */
+    PKG_CONTENT_TYPE_AL = 0x1C, /* pkg_ps4_ac_nodata */
+    PKG_CONTENT_TYPE_DP = 0x1E, /* pkg_ps4_delta_patch */
 };
 
 namespace INSTALLER

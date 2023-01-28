@@ -105,6 +105,9 @@ namespace INSTALLER
 		ret = sceUserServiceGetForegroundUser(&user_id);
 		const char *package_type;
 		uint32_t content_type = BE32(header->pkg_content_type);
+		uint32_t flags = BE32(header->pkg_content_flags);
+		bool is_patch = false;
+
 		switch (content_type)
 		{
 		case PKG_CONTENT_TYPE_GD:
@@ -125,6 +128,14 @@ namespace INSTALLER
 			break;
 		}
 
+		if (flags & PKG_CONTENT_FLAGS_FIRST_PATCH ||
+		    flags & PKG_CONTENT_FLAGS_SUBSEQUENT_PATCH ||
+			flags & PKG_CONTENT_FLAGS_DELTA_PATCH ||
+			flags & PKG_CONTENT_FLAGS_CUMULATIVE_PATCH)
+		{
+			is_patch = true;
+		}
+
 		OrbisBgftDownloadParam params;
 		memset(&params, 0, sizeof(params));
 		{
@@ -142,7 +153,10 @@ namespace INSTALLER
 		}
 
 		int task_id = -1;
-		ret = sceBgftServiceIntDownloadRegisterTask(&params, &task_id);
+		if (!is_patch)
+			ret = sceBgftServiceIntDownloadRegisterTask(&params, &task_id);
+		else
+			ret = sceBgftServiceIntDebugDownloadRegisterPkg(&params, &task_id);
 		if (ret)
 		{
 			goto err;
