@@ -1,3 +1,5 @@
+# This repo is archived, please refer to the superceded version. https://github.com/cy33hc/ps4-ezremote-client
+
 # PS4 SMB Client
 
 Simple SMB client for the PS4. Allows you to transfer files between the PS4 and your Windows Shares, Linux SMB Shares and NAS SMB shares
